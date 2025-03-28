@@ -1,0 +1,36 @@
+input{
+    border: 2px solid black;
+}
+.innerdiv{
+    border: 2px solid black;
+    padding: 10px;
+}
+.maindiv{
+    height: 90vh;
+}
+.disclaimer::before{
+    content:"''";
+    padding: 5px;
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.disclaimer::after{
+    content:"''";
+    padding: 5px;
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+}
+.bgstudent{
+   height: 500px;
+   background-image: url('Images/Untitled\ design\ \(12\).png');
+   background-size: 100% 100%;
+   
+}
+.headingfontstudent{
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400px;
+    font-size: 60px;
+}
