@@ -81,6 +81,9 @@ ob_start(); // Start output buffering to prevent header errors
                             <a class="dropdown-item" href="batches.php"
                                 >Batches</a
                             >
+                            <a class="dropdown-item" href="progressreports.php"
+                                >Progress Reports</a
+                            >
                         </div>
                     </li>
                     <li>
