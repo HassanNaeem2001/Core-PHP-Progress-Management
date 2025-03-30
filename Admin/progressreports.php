@@ -23,9 +23,10 @@ if (isset($_POST['btnaddprogress'])) {
         $practical = $_POST['practical'][$key];
         $modular = $_POST['modular'][$key];
         $dateofprogress = $_POST['dateofprogress'];
+        $remarks = $_POST['remarks'][$key]; // Get Remarks Input
 
-        $query = "INSERT INTO studentprogress (studentid, assignmentmarks, quizmarksinternal, practical, modular, dateofprogress) 
-                  VALUES ('$studentid', '$assignmentmarks', '$quizmarksinternal', '$practical', '$modular', '$dateofprogress')";
+        $query = "INSERT INTO studentprogress (studentid, assignmentmarks, quizmarksinternal, practical, modular, dateofprogress, remarks) 
+                  VALUES ('$studentid', '$assignmentmarks', '$quizmarksinternal', '$practical', '$modular', '$dateofprogress', '$remarks')";
         mysqli_query($conn, $query);
     }
 
@@ -75,6 +76,7 @@ if (isset($_POST['btnaddprogress'])) {
                     <th>Quiz Marks</th>
                     <th>Practical Marks</th>
                     <th>Modular Marks</th>
+                    <th>Remarks</th>
                 </tr>
             </thead>
             <tbody>
@@ -88,6 +90,7 @@ if (isset($_POST['btnaddprogress'])) {
                         <td><input type="number" name="quizmarksinternal[]" class="form-control" required></td>
                         <td><input type="number" name="practical[]" class="form-control"></td>
                         <td><input type="number" name="modular[]" class="form-control"></td>
+                        <td><input type="text" name="remarks[]" class="form-control" placeholder="Enter remarks"></td>
                     </tr>
                 <?php } ?>
             </tbody>
