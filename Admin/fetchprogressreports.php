@@ -73,6 +73,7 @@ if (isset($_POST['batchfilter'], $_POST['monthfilter'], $_POST['yearfilter'])) {
 <div class="container-fluid mt-4">
     <h4>Student Progress Records</h4>
     <hr>
+    
     <table class="table table-bordered">
         <thead class="table-dark">
             <tr>
@@ -90,18 +91,18 @@ if (isset($_POST['batchfilter'], $_POST['monthfilter'], $_POST['yearfilter'])) {
         </thead>
         <tbody>
             <?php foreach ($progressRecords as $record) { 
-                $whatsappMessage = "Dear **" . $record['studentname'] . "**,\n\n" .
-                "Here is your progress report for the month of **" . $record['month'] . "**.\n\n" .
-                "**Enrollment No:** " . $record['enrollmentno'] . "\n" .
-                "**Batch Code:** " . $record['batchcode'] . "\n" .
-                "**Faculty:** " . $record['staffname'] . "\n" .
-                "**Institute:** " . $record['institute'] . "\n\n" .
-                "**Assignment Marks:** " . ($record['assignmentmarks'] > 0 ? $record['assignmentmarks'] : 'Not Conducted') . "\n" .
-                "**Quiz Marks:** " . ($record['quizmarksinternal'] > 0 ? $record['quizmarksinternal'] : 'Not Conducted') . "\n" .
-                "**Practical Marks:** " . ($record['practical'] > 0 ? $record['practical'] : 'Not Conducted') . "\n" .
-                "**Modular Marks:** " . ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted') . "\n" .
-                "**Remarks:** " . (!empty($record['remarks']) ? $record['remarks'] : 'No Remarks') . "\n\n" .
-                "Regards,\n**Aptech Scheme 33**";
+                $whatsappMessage = "Dear *" . $record['studentname'] . "*,\n\n" .
+                "Here is your progress report for the month of *" . $record['month'] . "*.\n\n" .
+                "*Enrollment No:* " . $record['enrollmentno'] . "\n" .
+                "*Batch Code:* " . $record['batchcode'] . "\n" .
+                "*Faculty:* " . $record['staffname'] . "\n" .
+                "*Institute:* " . $record['institute'] . "\n\n" .
+                "*Assignment Marks:* " . ($record['assignmentmarks'] > 0 ? $record['assignmentmarks'] : 'Not Conducted') . "\n" .
+                "*Quiz Marks:* " . ($record['quizmarksinternal'] > 0 ? $record['quizmarksinternal'] : 'Not Conducted') . "\n" .
+                "*Practical Marks:* " . ($record['practical'] > 0 ? $record['practical'] : 'Not Conducted') . "\n" .
+                "*Modular Marks:* " . ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted') . "\n" .
+                "*Remarks:* " . (!empty($record['remarks']) ? $record['remarks'] : 'No Remarks') . "\n\n" .
+                "Regards,\n*Aptech Scheme 33*";
 
                 $whatsappURL = "https://wa.me/92" . ltrim($record['studentphoneno'], '0') . "?text=" . urlencode($whatsappMessage);
             ?>
