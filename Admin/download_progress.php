@@ -1,10 +1,9 @@
 <?php
 include('../connect.php');
-require '../vendor/autoload.php'; // Make sure you have PHPSpreadsheet installed
+require '../vendor/autoload.php'; // Ensure PHPSpreadsheet is installed
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Font;
 
@@ -14,7 +13,8 @@ $month = $_POST['monthfilter'] ?? '';
 
 $query = "SELECT s.enrollmentno, s.studentname, b.batchcode, f.staffname AS faculty, 
                  MONTHNAME(sp.dateofprogress) AS month, 'Aptech Scheme 33' AS institute,
-                 sp.assignmentmarks, sp.quizmarksinternal, sp.practical, sp.modular
+                 sp.assignmentmarks, sp.quizmarksinternal, sp.practical, sp.modular,
+                 sp.classes_conducted, sp.classes_held  -- New Fields Added
           FROM studentprogress sp
           JOIN student s ON sp.studentid = s.studentid
           JOIN batches b ON s.studentbatch = b.batchid
@@ -26,8 +26,12 @@ $result = mysqli_query($conn, $query);
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
-// Set headers
-$headers = ["Enrollment No", "Student Name", "Batch Code", "Faculty", "Month", "Institute", "Assignment Marks", "Quiz Marks", "Practical Marks", "Modular Marks"];
+// Set headers (including new columns)
+$headers = [
+    "Enrollment No", "Student Name", "Batch Code", "Faculty", "Month", "Institute",
+    "Assignment Marks", "Quiz Marks", "Practical Marks", "Modular Marks",
+    "Classes Conducted", "Classes Held"
+];
 $sheet->fromArray([$headers], NULL, 'A1');
 
 // Apply styling to headers
@@ -35,7 +39,7 @@ $headerStyle = [
     'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
     'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '000000']],
 ];
-$sheet->getStyle('A1:J1')->applyFromArray($headerStyle);
+$sheet->getStyle('A1:L1')->applyFromArray($headerStyle);
 
 // Fill data
 $row = 2;
@@ -50,13 +54,15 @@ while ($record = mysqli_fetch_assoc($result)) {
         ($record['assignmentmarks'] > 0 ? $record['assignmentmarks'] : 'Not Conducted'),
         ($record['quizmarksinternal'] > 0 ? $record['quizmarksinternal'] : 'Not Conducted'),
         ($record['practical'] > 0 ? $record['practical'] : 'Not Conducted'),
-        ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted')
+        ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted'),
+        ($record['classes_conducted'] > 0 ? $record['classes_conducted'] : 'N/A'), // New Field
+        ($record['classes_held'] > 0 ? $record['classes_held'] : 'N/A')  // New Field
     ], NULL, "A$row");
     $row++;
 }
 
 // Set column width for readability
-foreach (range('A', 'J') as $col) {
+foreach (range('A', 'L') as $col) {
     $sheet->getColumnDimension($col)->setAutoSize(true);
 }
 

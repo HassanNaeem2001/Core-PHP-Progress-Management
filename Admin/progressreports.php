@@ -22,11 +22,15 @@ if (isset($_POST['btnaddprogress'])) {
         $quizmarksinternal = $_POST['quizmarksinternal'][$key];
         $practical = $_POST['practical'][$key];
         $modular = $_POST['modular'][$key];
+        $classes_conducted = $_POST['classes_conducted'][$key]; // New Field
+        $classes_held = $_POST['classes_held'][$key]; // New Field
         $dateofprogress = $_POST['dateofprogress'];
-        $remarks = $_POST['remarks'][$key]; // Get Remarks Input
+        $remarks = $_POST['remarks'][$key];
 
-        $query = "INSERT INTO studentprogress (studentid, assignmentmarks, quizmarksinternal, practical, modular, dateofprogress, remarks) 
-                  VALUES ('$studentid', '$assignmentmarks', '$quizmarksinternal', '$practical', '$modular', '$dateofprogress', '$remarks')";
+        $query = "INSERT INTO studentprogress 
+                  (studentid, assignmentmarks, quizmarksinternal, practical, modular, classes_conducted, classes_held, dateofprogress, remarks) 
+                  VALUES 
+                  ('$studentid', '$assignmentmarks', '$quizmarksinternal', '$practical', '$modular', '$classes_conducted', '$classes_held', '$dateofprogress', '$remarks')";
         mysqli_query($conn, $query);
     }
 
@@ -76,6 +80,8 @@ if (isset($_POST['btnaddprogress'])) {
                     <th>Quiz Marks</th>
                     <th>Practical Marks</th>
                     <th>Modular Marks</th>
+                    <th>Classes Attended</th>
+                    <th>Classes Held</th>
                     <th>Remarks</th>
                 </tr>
             </thead>
@@ -90,6 +96,8 @@ if (isset($_POST['btnaddprogress'])) {
                         <td><input type="number" name="quizmarksinternal[]" class="form-control" required></td>
                         <td><input type="number" name="practical[]" class="form-control"></td>
                         <td><input type="number" name="modular[]" class="form-control"></td>
+                        <td><input type="number" name="classes_conducted[]" class="form-control" required></td>
+                        <td><input type="number" name="classes_held[]" class="form-control" required></td>
                         <td><input type="text" name="remarks[]" class="form-control" placeholder="Enter remarks"></td>
                     </tr>
                 <?php } ?>

@@ -74,6 +74,16 @@ if (isset($_POST['batchfilter'], $_POST['monthfilter'], $_POST['yearfilter'])) {
     <h4>Student Progress Records</h4>
     <hr>
     
+    <!-- Download Report Form -->
+    <form action="download_progress.php" method="post">
+        <input type="hidden" name="batchfilter" value="<?php echo $_POST['batchfilter']; ?>">
+        <input type="hidden" name="monthfilter" value="<?php echo $_POST['monthfilter']; ?>">
+        <input type="hidden" name="yearfilter" value="<?php echo $_POST['yearfilter']; ?>">
+        <div class="text-end mb-2">
+            <button type="submit" class="btn btn-success">Download Report</button>
+        </div>
+    </form>
+    
     <table class="table table-bordered">
         <thead class="table-dark">
             <tr>
