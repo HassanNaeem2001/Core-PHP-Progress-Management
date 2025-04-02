@@ -6,15 +6,16 @@ include('../connect.php');
 if (isset($_POST['btnUpload'])) {
     $bookname = $_POST['bookname'];
     $booksem = $_POST['booksem'];
-    $uploadDir = "../Uploads/";
+    $uploadDir = "../Student/uploads/";
 
     // File upload handling
     $fileName = basename($_FILES["bookfile"]["name"]);
-    $filePath = $uploadDir . $fileName;
+    $cleanName = preg_replace('/[^A-Za-z0-9\.\-_]/', '_', $fileName); // Replace special characters with "_"
+    $targetPath = "../Student/uploads/" . $cleanName;
     
-    if (move_uploaded_file($_FILES["bookfile"]["tmp_name"], $filePath)) {
+    if (move_uploaded_file($_FILES["bookfile"]["tmp_name"], $targetPath)) {
         // Insert into database
-        $query = "INSERT INTO books (bookname, bookfile, booksem) VALUES ('$bookname', '$fileName', '$booksem')";
+        $query = "INSERT INTO books (bookname, bookfile, booksem) VALUES ('$bookname', '$cleanName', '$booksem')";
         if (mysqli_query($conn, $query)) {
             $success = "File uploaded successfully!";
         } else {

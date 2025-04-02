@@ -100,8 +100,6 @@ if (isset($_POST['btnlogout'])) {
         <h2 class="headingfontstudent text-decoration-underline text-center" style="font-size:30px">
             Showing results based on your profile
         </h2>
-
-        <h2 class="text-center">Study Materials for <?php echo htmlspecialchars($_SESSION['semester']); ?></h2>
         <table class="table table-bordered mt-4">
             <thead>
                 <tr>
@@ -111,14 +109,14 @@ if (isset($_POST['btnlogout'])) {
             </thead>
             <tbody>
                 <?php while ($book = $books_result->fetch_assoc()) { 
-                    $file_name = htmlspecialchars($book['bookfile']);
-                    $file_path = "../uploads/" . $file_name;
+                    $file_name = $book['bookfile']; 
+                    $file_path = realpath(__DIR__ . "/uploads/" . $file_name);
                 ?>
                     <tr>
                         <td><?php echo htmlspecialchars($book['bookname']); ?></td>
                         <td>
-                            <?php if (file_exists($file_path)) { ?>
-                                <a href="<?php echo $file_path; ?>" class="btn btn-primary" download>Download</a>
+                            <?php if ($file_path && file_exists($file_path)) { ?>
+                                <a href="<?php echo "uploads/" . urlencode($file_name); ?>" class="btn btn-primary" download>Download</a>
                             <?php } else { ?>
                                 <span class="text-danger">File not found</span>
                             <?php } ?>
