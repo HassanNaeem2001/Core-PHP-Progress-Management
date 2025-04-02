@@ -80,35 +80,46 @@ if(isset($_POST['btnregisterfaculty'])) {
     <h4 class="m-4">Staff - View</h4>
     <hr>
     <table id="staffTable" class="table table-bordered">
-        <thead>
+        <thead class="table-dark">
             <tr>
                 <th>Staff Name</th>
                 <th>Staff Email</th>
                 <th>Staff Designation</th>
                 <th>Staff Status</th>
+                <th>Update</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
             <?php
             $q = mysqli_query($conn, "SELECT * FROM staff") or die(mysqli_error($conn));
-            while($row = mysqli_fetch_array($q)) {
+            while ($row = mysqli_fetch_array($q)) {
             ?>
-            <tr>
-                <td><?php echo $row['staffname']; ?></td>
-                <td><?php echo $row['staffemail']; ?></td>
-                <td><?php echo $row['staffdesignation']; ?></td>
-                <td>
-                    <?php if($row['status'] == 'active') { ?>
-                        <p class="text-success">Active</p>
-                    <?php } else { ?>
-                        <p class="text-danger">Inactive</p>
-                    <?php } ?>
-                </td>
-            </tr>
+                <tr>
+                    <td><?php echo $row['staffname']; ?></td>
+                    <td><?php echo $row['staffemail']; ?></td>
+                    <td><?php echo $row['staffdesignation']; ?></td>
+                    <td>
+                        <?php if ($row['status'] == 'active') { ?>
+                            <p class="text-success">Active</p>
+                        <?php } else { ?>
+                            <p class="text-danger">Inactive</p>
+                        <?php } ?>
+                    </td>
+                    <td>
+                        <!-- Update Button -->
+                        <a href="update_staff.php?staffid=<?php echo $row['staffid']; ?>" class="btn btn-warning btn-sm">Update</a>
+                    </td>
+                    <td>
+                        <!-- Delete Button -->
+                        <a href="delete_staff.php?staffid=<?php echo $row['staffid']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this staff member?');">Delete</a>
+                    </td>
+                </tr>
             <?php } ?>
         </tbody>
     </table>
 </div>
+
 
 <?php include('footeradmin.php'); ?>
 

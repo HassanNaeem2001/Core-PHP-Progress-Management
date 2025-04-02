@@ -35,6 +35,9 @@ ob_start();
                     <li class="nav-item">
                         <a class="nav-link active" href="#">Home</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="studymaterial.php">Study Material</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownMenu" data-bs-toggle="dropdown">
                             Academics
@@ -68,44 +71,56 @@ ob_start();
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
+                <?php if (isset($_GET['success'])) { ?>
+    <div class="alert alert-success"><?php echo $_GET['success']; ?></div>
+<?php } ?>
+
+<?php if (isset($_GET['error'])) { ?>
+    <div class="alert alert-danger"><?php echo $_GET['error']; ?></div>
+<?php } ?>
                     <h4 class="text-dark headingfontstudent" style="font-size:25px">Your Details</h4>
                     <div class="table-responsive">
-                        <table class="table table-dark table-striped table-bordered table-hover shadow-lg">
-                            <thead class="text-center">
-                                <tr>
-                                    <th>Student Name</th>
-                                    <th>Enrollment No</th>
-                                    <th>Batch</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Faculty</th>
-                                    <th>Current Semester</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php 
-                                $query = mysqli_query($conn, "
-                                    SELECT 
-                                        batches.batchcode, 
-                                        batches.currentsem, 
-                                        staff.staffname 
-                                    FROM batches 
-                                    LEFT JOIN staff ON batches.batchinstructor = staff.staffid
-                                    WHERE batches.batchid = {$_SESSION['studentbatch']}
-                                ");
-                                $data = mysqli_fetch_assoc($query);
-                                ?>
-                                <tr class="text-center">
-                                    <td><?php echo $_SESSION['studentname']; ?></td>
-                                    <td><?php echo $_SESSION['enrollmentno']; ?></td>
-                                    <td><?php echo $data['batchcode']; ?></td>
-                                    <td><?php echo $_SESSION['studentemail']; ?></td>
-                                    <td><?php echo $_SESSION['studentphoneno']; ?></td>
-                                    <td><?php echo $data['staffname']; ?></td>
-                                    <td><?php echo $data['currentsem']; ?></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            <table class="table table-dark table-striped table-bordered table-hover shadow-lg">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Enrollment No</th>
+                                        <th>Batch</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Faculty</th>
+                                        <th>Current Semester</th>
+                                        <th>Update Password</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                    $query = mysqli_query($conn, "
+                                        SELECT 
+                                            batches.batchcode, 
+                                            batches.currentsem, 
+                                            staff.staffname 
+                                        FROM batches 
+                                        LEFT JOIN staff ON batches.batchinstructor = staff.staffid
+                                        WHERE batches.batchid = {$_SESSION['studentbatch']}
+                                    ");
+                                    $data = mysqli_fetch_assoc($query);
+                                    ?>
+                                    <tr class="text-center">
+                                        <td><?php echo $_SESSION['studentname']; ?></td>
+                                        <td><?php echo $_SESSION['enrollmentno']; ?></td>
+                                        <td><?php echo $data['batchcode']; ?></td>
+                                        <td><?php echo $_SESSION['studentemail']; ?></td>
+                                        <td><?php echo $_SESSION['studentphoneno']; ?></td>
+                                        <td><?php echo $data['staffname']; ?></td>
+                                        <td><?php echo $data['currentsem']; ?></td>
+                                        <td>
+    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updatePasswordModal">Update Password</button>
+</td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
                     </div>
                 </div>
             </div>
@@ -240,6 +255,36 @@ if (mysqli_num_rows($query) > 0) {
             </div>
         </div>
     </div>
+    <!-- Password Update Modal -->
+<div class="modal fade" id="updatePasswordModal" tabindex="-1" aria-labelledby="updatePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updatePasswordModalLabel">Update Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="update_password.php" method="post">
+                    <input type="hidden" name="studentid" value="<?php echo $_SESSION['studentid']; ?>">
+                    
+                    <div class="mb-3">
+                        <label for="newpassword" class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="newpassword" name="newpassword" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirmpassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmpassword" name="confirmpassword" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100" name="btnupdatepassword">Update Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     <?php
     include('footer.php');
     ?>

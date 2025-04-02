@@ -15,15 +15,17 @@ if (isset($_POST['batchfilter'], $_POST['monthfilter'], $_POST['yearfilter'])) {
     $year = $_POST['yearfilter'];
     
     $progressQuery = mysqli_query($conn, "
-        SELECT sp.*, s.enrollmentno, s.studentname, s.studentphoneno, b.batchcode, st.staffname, 
-               MONTHNAME(sp.dateofprogress) AS month, 'Aptech Scheme 33' AS institute 
-        FROM studentprogress sp 
-        JOIN student s ON sp.studentid = s.studentid 
-        JOIN batches b ON s.studentbatch = b.batchid 
-        JOIN staff st ON b.batchinstructor = st.staffid 
-        WHERE s.studentbatch = '$batchid' 
-        AND MONTH(sp.dateofprogress) = '$month' 
-        AND YEAR(sp.dateofprogress) = '$year'");
+    SELECT sp.progressno, sp.*, s.enrollmentno, s.studentname, s.studentphoneno, 
+           s.studentguardianphoneno, b.batchcode, st.staffname, 
+           MONTHNAME(sp.dateofprogress) AS month, 'Aptech Scheme 33' AS institute 
+    FROM studentprogress sp 
+    JOIN student s ON sp.studentid = s.studentid 
+    JOIN batches b ON s.studentbatch = b.batchid 
+    JOIN staff st ON b.batchinstructor = st.staffid 
+    WHERE s.studentbatch = '$batchid' 
+    AND MONTH(sp.dateofprogress) = '$month' 
+    AND YEAR(sp.dateofprogress) = '$year'");
+
     
     while ($row = mysqli_fetch_assoc($progressQuery)) {
         $progressRecords[] = $row;
@@ -84,6 +86,7 @@ if (isset($_POST['batchfilter'], $_POST['monthfilter'], $_POST['yearfilter'])) {
         </div>
     </form>
     
+    <div class="table table-responsive">
     <table class="table table-bordered">
         <thead class="table-dark">
             <tr>
@@ -96,43 +99,65 @@ if (isset($_POST['batchfilter'], $_POST['monthfilter'], $_POST['yearfilter'])) {
                 <th>Practical Marks</th>
                 <th>Modular Marks</th>
                 <th>Remarks</th>
-                <th>Actions</th>
+                <th>Send Report</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($progressRecords as $record) { 
-                $whatsappMessage = "Dear *" . $record['studentname'] . "*,\n\n" .
-                "Here is your progress report for the month of *" . $record['month'] . "*.\n\n" .
-                "*Enrollment No:* " . $record['enrollmentno'] . "\n" .
-                "*Batch Code:* " . $record['batchcode'] . "\n" .
-                "*Faculty:* " . $record['staffname'] . "\n" .
-                "*Institute:* " . $record['institute'] . "\n\n" .
-                "*Assignment Marks:* " . ($record['assignmentmarks'] > 0 ? $record['assignmentmarks'] : 'Not Conducted') . "\n" .
-                "*Quiz Marks:* " . ($record['quizmarksinternal'] > 0 ? $record['quizmarksinternal'] : 'Not Conducted') . "\n" .
-                "*Practical Marks:* " . ($record['practical'] > 0 ? $record['practical'] : 'Not Conducted') . "\n" .
-                "*Modular Marks:* " . ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted') . "\n" .
-                "*Remarks:* " . (!empty($record['remarks']) ? $record['remarks'] : 'No Remarks') . "\n\n" .
-                "Regards,\n*Aptech Scheme 33*";
+        <?php foreach ($progressRecords as $record) { 
+    // Message for Student
+    $studentMessage = "Dear *" . $record['studentname'] . "*,\n\n" .
+    "Here is your progress report for the month of *" . $record['month'] . "*.\n\n" .
+    "*Enrollment No:* " . $record['enrollmentno'] . "\n" .
+    "*Batch Code:* " . $record['batchcode'] . "\n" .
+    "*Faculty:* " . $record['staffname'] . "\n" .
+    "*Institute:* " . $record['institute'] . "\n\n" .
+    "*Assignment Marks:* " . ($record['assignmentmarks'] > 0 ? $record['assignmentmarks'] : 'Not Conducted') . "\n" .
+    "*Quiz Marks:* " . ($record['quizmarksinternal'] > 0 ? $record['quizmarksinternal'] : 'Not Conducted') . "\n" .
+    "*Practical Marks:* " . ($record['practical'] > 0 ? $record['practical'] : 'Not Conducted') . "\n" .
+    "*Modular Marks:* " . ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted') . "\n" .
+    "*Remarks:* " . (!empty($record['remarks']) ? $record['remarks'] : 'No Remarks') . "\n\n" .
+    "Regards,\n*Aptech Scheme 33*";
 
-                $whatsappURL = "https://wa.me/92" . ltrim($record['studentphoneno'], '0') . "?text=" . urlencode($whatsappMessage);
-            ?>
-                <tr>
-                    <td><?php echo $record['enrollmentno']; ?></td>
-                    <td><?php echo $record['studentname']; ?></td>
-                    <td><?php echo $record['batchcode']; ?></td>
-                    <td><?php echo $record['staffname']; ?></td>
-                    <td><?php echo ($record['assignmentmarks'] > 0 ? $record['assignmentmarks'] : 'Not Conducted'); ?></td>
-                    <td><?php echo ($record['quizmarksinternal'] > 0 ? $record['quizmarksinternal'] : 'Not Conducted'); ?></td>
-                    <td><?php echo ($record['practical'] > 0 ? $record['practical'] : 'Not Conducted'); ?></td>
-                    <td><?php echo ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted'); ?></td>
-                    <td><?php echo (!empty($record['remarks']) ? $record['remarks'] : 'No Remarks'); ?></td>
-                    <td>
-                        <a href="<?php echo $whatsappURL; ?>" target="_blank" class="btn btn-success">Send Report</a>
-                    </td>
-                </tr>
-            <?php } ?>
+    // Message for Guardian
+    $guardianMessage = "Dear Guardian,\n\n" .
+    "This is the progress report of *" . $record['studentname'] . "* for the month of *" . $record['month'] . "*.\n\n" .
+    "*Enrollment No:* " . $record['enrollmentno'] . "\n" .
+    "*Batch Code:* " . $record['batchcode'] . "\n" .
+    "*Faculty:* " . $record['staffname'] . "\n" .
+    "*Institute:* " . $record['institute'] . "\n\n" .
+    "*Assignment Marks:* " . ($record['assignmentmarks'] > 0 ? $record['assignmentmarks'] : 'Not Conducted') . "\n" .
+    "*Quiz Marks:* " . ($record['quizmarksinternal'] > 0 ? $record['quizmarksinternal'] : 'Not Conducted') . "\n" .
+    "*Practical Marks:* " . ($record['practical'] > 0 ? $record['practical'] : 'Not Conducted') . "\n" .
+    "*Modular Marks:* " . ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted') . "\n" .
+    "*Remarks:* " . (!empty($record['remarks']) ? $record['remarks'] : 'No Remarks') . "\n\n" .
+    "Regards,\n*Aptech Scheme 33 Center*";
+
+    // Generate WhatsApp URLs for student and guardian
+    $studentPhone = "https://wa.me/92" . ltrim($record['studentphoneno'], '0') . "?text=" . urlencode($studentMessage);
+    $guardianPhone = "https://wa.me/92" . ltrim($record['studentguardianphoneno'], '0') . "?text=" . urlencode($guardianMessage);
+?>
+    <tr>
+        <td><?php echo $record['enrollmentno']; ?></td>
+        <td><?php echo $record['studentname']; ?></td>
+        <td><?php echo $record['batchcode']; ?></td>
+        <td><?php echo $record['staffname']; ?></td>
+        <td><?php echo ($record['assignmentmarks'] > 0 ? $record['assignmentmarks'] : 'Not Conducted'); ?></td>
+        <td><?php echo ($record['quizmarksinternal'] > 0 ? $record['quizmarksinternal'] : 'Not Conducted'); ?></td>
+        <td><?php echo ($record['practical'] > 0 ? $record['practical'] : 'Not Conducted'); ?></td>
+        <td><?php echo ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted'); ?></td>
+        <td><?php echo (!empty($record['remarks']) ? $record['remarks'] : 'No Remarks'); ?></td>
+        <td>
+           <div class="d-flex">
+           <a href="<?php echo $studentPhone; ?>" target="_blank" class="btn btn-success btn-sm mx-2">To Student</a>
+           <a href="<?php echo $guardianPhone; ?>" target="_blank" class="btn btn-primary btn-sm">To Guardian</a>
+           </div>
+        </td>
+    </tr>
+<?php } ?>
+
         </tbody>
     </table>
+    </div>
 </div>
 <?php } ?>
 

@@ -60,6 +60,9 @@ $query = mysqli_query($conn, "
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="nav-link active" href="studentdashboard.php">Home</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="studymaterial.php">Study Material</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownMenu" data-bs-toggle="dropdown">Academics</a>
                         <ul class="dropdown-menu">

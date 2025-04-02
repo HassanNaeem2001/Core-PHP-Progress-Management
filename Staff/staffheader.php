@@ -61,6 +61,9 @@ include('staffsessionlogic.php');
                                 <a class="dropdown-item" href="fetchprogressreports.php">View Progress</a>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a href="uploadmaterial.php" class="nav-link">Upload Material</a>
+                        </li>
                     </ul>
                     <form class="d-flex my-2 my-lg-0" method="post">
                        

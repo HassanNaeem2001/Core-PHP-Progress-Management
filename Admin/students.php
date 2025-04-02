@@ -76,6 +76,7 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
 <div class="container-fluid mt-5">
     <h4 class="m-4 pt-3">Students - View</h4>
     <hr>
+    <div class="table table-responsive">
     <table id="studentsTable" class="table table-bordered">
         <thead class="table-dark">
             <tr>
@@ -84,6 +85,7 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
                 <th>Batch</th>
                 <th>Status</th>
                 <th>Update Status</th>
+                <th>Actions</th> <!-- Added Actions column -->
             </tr>
         </thead>
         <tbody>
@@ -104,11 +106,20 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
                             <button type="submit" class="btn btn-primary btn-sm" name="update_status">Update</button>
                         </form>
                     </td>
+                    <td>
+                        <!-- Delete Button -->
+                        <form method="post" action="">
+                            <input type="hidden" name="student_id" value="<?php echo $row['studentid']; ?>">
+                            <button type="submit" class="btn btn-danger btn-sm" name="delete_student">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             <?php } ?>
         </tbody>
     </table>
+    </div>
 </div>
+
 
 <?php include('footeradmin.php'); ?>
 
@@ -127,3 +138,24 @@ $(document).ready(function() {
     });
 });
 </script>
+<?php
+// Handle the delete request
+if (isset($_POST['delete_student'])) {
+    $student_id = $_POST['student_id'];
+
+    // Step 1: Delete related records from studentprogress table
+    $deleteProgressQuery = "DELETE FROM studentprogress WHERE studentid = '$student_id'";
+    if (mysqli_query($conn, $deleteProgressQuery)) {
+        // Step 2: Delete the student record from the students table
+        $deleteStudentQuery = "DELETE FROM student WHERE studentid = '$student_id'";
+
+        if (mysqli_query($conn, $deleteStudentQuery)) {
+            echo "<script>alert('Student deleted successfully'); window.location.href='students.php';</script>";
+        } else {
+            echo "<script>alert('Error deleting student');</script>";
+        }
+    } else {
+        echo "<script>alert('Error deleting student progress records');</script>";
+    }
+}
+?>

@@ -85,14 +85,6 @@ if (isset($_POST['update_staff'])) {
                         <input type="email" name="staffemail" class="form-control" value="<?php echo $staff['staffemail']; ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Designation</label>
-                        <input type="text" name="staffdesignation" class="form-control" value="<?php echo $staff['staffdesignation']; ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Timings</label>
-                        <input type="text" name="stafftimings" class="form-control" value="<?php echo $staff['stafftimings']; ?>" required>
-                    </div>
-                    <div class="mb-3">
                         <label class="form-label">Phone</label>
                         <input type="text" name="staffphone" class="form-control" value="<?php echo $staff['staffphone']; ?>" required>
                     </div>

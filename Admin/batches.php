@@ -112,6 +112,7 @@ $result = mysqli_query($conn, $query);
                 <th>Batch Type</th>
                 <th>Batch Semester</th> <!-- Added Semester Column -->
                 <th>Batch Status</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -129,6 +130,13 @@ $result = mysqli_query($conn, $query);
                             echo '<p class="text-danger">Inactive</p>';
                         }
                    ?>
+                    </td>
+                    <td>
+                    <a href="update_batch.php?batchid=<?php echo $row['batchid']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="" method="POST" style="display:inline;">
+                            <input type="hidden" name="batchid" value="<?php echo $row['batchid']; ?>">
+                            <button type="submit" name="delete_batch" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
                     </td>
                   <?php
             }
@@ -155,3 +163,16 @@ $(document).ready(function() {
     });
 });
 </script>
+<?php
+if (isset($_POST['delete_batch'])) {
+    $batchid = $_POST['batchid'];
+
+    $deleteQuery = "DELETE FROM batches WHERE batchid = '$batchid'";
+
+    if (mysqli_query($conn, $deleteQuery)) {
+        echo "<script>alert('Batch deleted successfully'); window.location.href='batches.php';</script>";
+    } else {
+        echo "<script>alert('Error deleting batch');</script>";
+    }
+}
+?>
