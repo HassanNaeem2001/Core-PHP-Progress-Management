@@ -41,12 +41,12 @@ ob_start();
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="allmonthsprogress.php">Over All Progress</a></li>
-                            <li><a class="dropdown-item" href="#">Jobs</a></li>
+                            <li><a class="dropdown-item" href="studentdashboard.php">Jobs</a></li>
                             <li><a class="dropdown-item" href="#">Attendance</a></li>
                         </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="#">Feedback</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Complaints</a></li>
+                    <li class="nav-item"><a class="nav-link" href="studentcomplaints.php">Complaints</a></li>
                 </ul>
                 <form method="post" class="d-flex">
                     <button type="submit" name="btnlogout" class="btn btn-danger">Logout</button>
@@ -205,37 +205,34 @@ if (mysqli_num_rows($query) > 0) {
                         <table class="table table-dark table-striped table-bordered table-hover shadow-lg">
                             <thead class="text-center">
                                 <tr>
-                                    <th>Student Name</th>
-                                    <th>Enrollment No</th>
-                                    <th>Batch</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Faculty</th>
-                                    <th>Current Semester</th>
+                                    <th>Job Title</th>
+                                    <th>Job Description</th>
+                                    <th>Apply Before</th>
+                                    <th>Operations</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php 
                                 $query = mysqli_query($conn, "
-                                    SELECT 
-                                        batches.batchcode, 
-                                        batches.currentsem, 
-                                        staff.staffname 
-                                    FROM batches 
-                                    LEFT JOIN staff ON batches.batchinstructor = staff.staffid
-                                    WHERE batches.batchid = {$_SESSION['studentbatch']}
+                                    SELECT * from jobs
+                                        
                                 ");
-                                $data = mysqli_fetch_assoc($query);
+                                while($data = mysqli_fetch_array($query))
+                                {
                                 ?>
                                 <tr class="text-center">
-                                    <td><?php echo $_SESSION['studentname']; ?></td>
-                                    <td><?php echo $_SESSION['enrollmentno']; ?></td>
-                                    <td><?php echo $data['batchcode']; ?></td>
-                                    <td><?php echo $_SESSION['studentemail']; ?></td>
-                                    <td><?php echo $_SESSION['studentphoneno']; ?></td>
-                                    <td><?php echo $data['staffname']; ?></td>
-                                    <td><?php echo $data['currentsem']; ?></td>
+                                    <td><?php echo $data['jobtitle']?></td>
+                                    <td><?php echo $data['jobdescription']?></td>
+                                    <td><?php echo date('d M Y', strtotime($data['applybefore'])); ?></td>
+                                    <td>
+                                        <form action="" method="post">
+                                            <button type="submit" name="btnpplyforjob" class="btn btn-primary">Apply Now</button>
+                                        </form>
+                                    </td>
                                 </tr>
+                                <?php
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>

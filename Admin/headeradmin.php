@@ -91,6 +91,10 @@ ob_start(); // Start output buffering to prevent header errors
                             <a class="dropdown-item" href="fetchprogressreports.php"
                                 >View Student Progress</a
                             >
+                            <hr>
+                            <a class="dropdown-item" href="monthlysar.php"
+                                >Generate Monthly SAR</a
+                            >
                         </div>
                     </li>
                     <li>

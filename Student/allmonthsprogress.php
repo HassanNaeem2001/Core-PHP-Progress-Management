@@ -64,12 +64,12 @@ $query = mysqli_query($conn, "
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownMenu" data-bs-toggle="dropdown">Academics</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">Over All Progress</a></li>
-                            <li><a class="dropdown-item" href="#">Jobs</a></li>
+                            <li><a class="dropdown-item" href="studentdashboard.php">Jobs</a></li>
                             <li><a class="dropdown-item" href="#">Attendance</a></li>
                         </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="#">Feedback</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Complaints</a></li>
+                    <li class="nav-item"><a class="nav-link" href="studentcomplaints.php">Complaints</a></li>
                 </ul>
                 <form method="post" class="d-flex">
                     <button type="submit" name="btnlogout" class="btn btn-danger">Logout</button>

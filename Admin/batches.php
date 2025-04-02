@@ -123,7 +123,7 @@ $result = mysqli_query($conn, $query);
                     <td><?php echo $row['currentsem']; ?></td> <!-- Displaying Semester -->
                     <td>
                         <?php
-                        if($row['batchstatus'] == 'active') {
+                        if($row['batchstatus'] == 'Active') {
                             echo '<p class="text-success">Active</p>';
                         } else {
                             echo '<p class="text-danger">Inactive</p>';
