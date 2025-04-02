@@ -116,7 +116,7 @@ $query = mysqli_query($conn, "
            
                 ?>
                 <tr class="text-center">
-                    <td><?php echo date('F', strtotime($progress['dateofprogress'])); ?></td>
+                    <td><?php echo date('F Y', strtotime($progress['dateofprogress'])); ?></td>
                     <td><?php echo $progress['assignmentmarks']; ?></td>
                     <td><?php echo $progress['quizmarksinternal']; ?></td>
                     <td><?php echo ($progress['practical'] + $progress['modular']) / 2; ?></td>

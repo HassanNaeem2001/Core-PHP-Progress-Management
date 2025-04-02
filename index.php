@@ -9,7 +9,7 @@ if (isset($_POST['btnlogin'])) {
     $password = md5(mysqli_real_escape_string($conn, $_POST['password'])); // Hash input with MD5
 
     // Fetch student details based on email
-    $query = mysqli_query($conn, "SELECT * FROM student WHERE studentemail='$email' LIMIT 1");
+    $query = mysqli_query($conn, "SELECT * FROM student WHERE studentemail='$email' OR enrollmentno='$email' LIMIT 1");
 
     if (mysqli_num_rows($query) == 1) {
         $student = mysqli_fetch_assoc($query);
@@ -61,7 +61,7 @@ if (isset($_POST['btnlogin'])) {
                 <hr>
                 <?php if (!empty($error)) { echo '<div class="alert alert-danger text-center">'.$error.'</div>'; } ?>
                 <form action="" method="post">
-                    <input type="text" class="form-control w-100" name="username" placeholder="Email" required />
+                    <input type="text" class="form-control w-100" name="username" placeholder="Student ID or Email" required />
                     <br>
                     <input type="password" class="form-control w-100" name="password" placeholder="Password" required />
                     <br>
