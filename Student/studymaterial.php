@@ -100,7 +100,8 @@ if (isset($_POST['btnlogout'])) {
         <h2 class="headingfontstudent text-decoration-underline text-center" style="font-size:30px">
             Showing results based on your profile
         </h2>
-        <table class="table table-bordered mt-4">
+        <center>
+        <table class="table table-striped table-bordered mt-4 w-75">
             <thead>
                 <tr>
                     <th>Book Name</th>
@@ -115,11 +116,13 @@ if (isset($_POST['btnlogout'])) {
                     <tr>
                         <td><?php echo htmlspecialchars($book['bookname']); ?></td>
                         <td>
+                            
                             <?php if ($file_path && file_exists($file_path)) { ?>
-                                <a href="<?php echo "uploads/" . urlencode($file_name); ?>" class="btn btn-primary" download>Download</a>
+                                <a href="<?php echo "uploads/" . urlencode($file_name); ?>" class="btn btn-warning w-100" download>Download</a>
                             <?php } else { ?>
                                 <span class="text-danger">File not found</span>
                             <?php } ?>
+                           
                         </td>
                     </tr>
                 <?php } ?>
@@ -128,6 +131,7 @@ if (isset($_POST['btnlogout'])) {
                 <?php } ?>
             </tbody>
         </table>
+        </center>
     </div>
 
     <br><br>

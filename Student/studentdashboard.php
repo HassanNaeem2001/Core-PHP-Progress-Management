@@ -255,6 +255,51 @@ if (mysqli_num_rows($query) > 0) {
             </div>
         </div>
     </div>
+
+      <!-- Exams Update Table -->
+      <div class="container-fluid mt-4 text-light d-flex justify-content-center">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <h4 class="text-dark headingfontstudent" style="font-size:25px">UpComing Exams</h4>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped table-bordered table-hover shadow-lg">
+                            <thead class="text-center">
+                                <tr>
+                                    <th>Skill Name</th>
+                                    <th>Exam Type</th>
+                                    <th>Exam Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              <?php
+                              // Fetch pending exams for the student's batch
+$studentBatch = $_SESSION['studentbatch'];
+$examQuery = $conn->prepare("SELECT skillname, examtype, examdate FROM exams 
+WHERE examofbatch = ? AND examdate > CURDATE()");
+$examQuery->bind_param("i", $studentBatch);
+$examQuery->execute();
+$examResult = $examQuery->get_result();
+                              ?>
+                                <?php while ($exam = $examResult->fetch_assoc()) { ?>
+                                <tr class="text-center">
+                                    <td><?= $exam['skillname'] ?></td>
+                                    <td><?= $exam['examtype'] ?></td>
+                                    <td><?= date('jS F Y', strtotime($exam['examdate'])) ?></td>
+
+                                </tr>
+                            <?php } ?>
+                            <?php if ($examResult->num_rows == 0) { ?>
+                                <tr><td colspan="3" class="text-center">No upcoming exams</td></tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Password Update Modal -->
 <div class="modal fade" id="updatePasswordModal" tabindex="-1" aria-labelledby="updatePasswordModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -284,22 +329,15 @@ if (mysqli_num_rows($query) > 0) {
     </div>
 </div>
 
-
-    <?php
-    include('footer.php');
-    ?>
-
-    <!-- Bootstrap JavaScript -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
-
 <?php
-if (isset($_POST['btnlogout'])) {
-    session_unset();
+if(isset($_POST['btnlogout']))
+{
     session_destroy();
-    header('Location: ../index.php');
-    exit();
+    header('Location:../index.php');
+    exit(); // It's a good practice to call exit after a redirect
 }
 ?>

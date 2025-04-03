@@ -64,6 +64,9 @@ ob_start(); // Start output buffering to prevent header errors
                     <li class="nav-item">
                         <a class="nav-link" href="postjobs.php">Jobs</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="exams.php">Exams</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a
                             class="nav-link dropdown-toggle"
