@@ -256,6 +256,122 @@ if (mysqli_num_rows($query) > 0) {
         </div>
     </div>
 
+    <!-- Assignments Table -->
+<div class="container-fluid mt-4 text-light d-flex justify-content-center">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <h4 class="text-dark headingfontstudent" style="font-size:25px">Pending Assignments</h4>
+                <div class="table-responsive">
+                <?php
+                // Database connection assumed already included
+
+                $studentBatch = $_SESSION['studentbatch']; // Student batch from session
+                $today = date('Y-m-d'); // Current date
+
+                $assignmentQuery = $conn->prepare("
+                    SELECT a.assignmentid, a.assignmentname, a.assignmentdescription, a.assignmentdeadline, a.marks, a.assignmentfile
+                    FROM assignments a
+                    WHERE a.assignmentid NOT IN (
+                        SELECT uploading_for FROM assignments_uploaded WHERE uploadedby = ?
+                    )
+                    ORDER BY a.assignmentdeadline ASC
+                ");
+
+                $assignmentQuery->bind_param("i", $_SESSION['studentid']);
+                $assignmentQuery->execute();
+                $assignmentResult = $assignmentQuery->get_result();
+                ?>
+
+                <table class="table table-dark table-striped table-bordered table-hover shadow-lg">
+                    <thead class="text-center">
+                        <tr>
+                            <th>Assignment Name</th>
+                            <th>Description</th>
+                            <th>Deadline</th>
+                            <th>Marks</th>
+                            <th>Faculty File</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php while ($assignment = $assignmentResult->fetch_assoc()) { 
+                        // Check if the student has submitted this assignment
+                        $submissionQuery = $conn->prepare("
+                            SELECT * FROM assignments_uploaded 
+                            WHERE uploading_for = ? AND uploaded_by = ?
+                        ");
+                        $submissionQuery->bind_param("ii", $assignment['assignmentid'], $_SESSION['studentid']);
+                        $submissionQuery->execute();
+                        $submissionResult = $submissionQuery->get_result();
+                        $isSubmitted = $submissionResult->num_rows > 0;
+
+                        // Get the file path if submitted
+                        $filePath = '';
+                        if ($isSubmitted) {
+                            $submission = $submissionResult->fetch_assoc();
+                            $filePath = $submission['uploaded_file'];
+                        }
+
+                        // Check if the deadline has passed
+                        $isMissed = strtotime($assignment['assignmentdeadline']) < time() && !$isSubmitted;
+                    ?>
+
+                        <tr class="text-center">
+                            <td><?= htmlspecialchars($assignment['assignmentname']) ?></td>
+                            <td><?= htmlspecialchars($assignment['assignmentdescription']) ?></td>
+                            <td><?= date('jS F Y', strtotime($assignment['assignmentdeadline'])) ?></td>
+                            <td>
+                                <?= is_numeric($assignment['marks']) ? htmlspecialchars($assignment['marks']) : '<span class="text-muted">N/A</span>' ?>
+                            </td>
+
+                            <td>
+                                <?php if (!$isSubmitted && !$isMissed && $assignment['assignmentfile']) { ?>
+                                    <!-- Show the faculty uploaded file before submission -->
+                                    <a href="<?= $assignment['assignmentfile'] ?>" target="_blank" class="btn btn-info btn-sm">View Faculty File</a>
+                                <?php } elseif ($isSubmitted) { ?>
+                                    <!-- Hide Faculty File after submission -->
+                                    <span class=" text-light">File Expired</span>
+                                <?php } else { ?>
+                                    <span class="text-">No Faculty File</span>
+                                <?php } ?>
+                            </td>
+
+                            <td>
+    <?php if ($isSubmitted) { ?>
+        <span class="text-warning">Submitted</span><br>
+        <?php if (!empty($filePath)) { ?>
+            <a href="<?= $filePath ?>" target="_blank" class="btn btn-info btn-sm">View Your File</a>
+        <?php } else { ?>
+            <span class="text-muted">No Attachments</span>
+        <?php } ?>
+    <?php } elseif ($isMissed) { ?>
+        <span class="text-danger">Missed Assignment</span>
+    <?php } else { ?>
+        <!-- If assignment is not submitted and not missed, show the file upload form -->
+        <form action="upload_assignment.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="assignmentid" value="<?= $assignment['assignmentid'] ?>">
+            <input type="file" name="assignmentfile" class="form-control mb-2" required>
+            <button type="submit" class="btn btn-warning btn-sm">Submit Assignment</button>
+        </form>
+    <?php } ?>
+</td>
+
+                        </tr>
+                    <?php } ?>
+
+                    <?php if ($assignmentResult->num_rows === 0) { ?>
+                        <tr><td colspan="6" class="text-center">No assignments found</td></tr>
+                    <?php } ?>
+                    </tbody>
+                </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
       <!-- Exams Update Table -->
       <div class="container-fluid mt-4 text-light d-flex justify-content-center">
         <div class="container-fluid">
