@@ -26,8 +26,16 @@ $staffCountsResult = mysqli_query($conn, $staffCountsQuery);
 $staffCounts = mysqli_fetch_assoc($staffCountsResult);
 ?>
 
+<center>
 <div class="container-fluid">
     <h4 class="m-4">Dashboard</h4>
+    <div class="mb-3">
+    <a href="downloadstudentcountreport.php?type=active" class="btn btn-dark">Download Active Students</a>
+    <a href="downloadstudentcountreport.php?type=dropout" class="btn btn-danger">Download Dropout Students</a>
+    <a href="downloadstudentcountreport.php?type=coursecom" class="btn btn-warning">Download Course Completed Students</a>
+</div>
+</center>
+
 
     <!-- Student Counts -->
     <div class="row">
