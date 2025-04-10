@@ -104,6 +104,24 @@ if (isset($_POST['batchfilter'], $_POST['monthfilter'], $_POST['yearfilter'])) {
         </thead>
         <tbody>
         <?php foreach ($progressRecords as $record) { 
+    // Calculate Overall Percentage
+    $maxAssignmentMarks = 100;
+    $maxQuizMarks = 100;
+    $maxPracticalMarks = 100;
+    $maxModularMarks = 100;
+    
+    // Calculate total marks obtained by the student
+    $totalMarksObtained = $record['assignmentmarks'] + $record['quizmarksinternal'] + $record['practical'] + $record['modular'];
+
+    // Calculate total possible marks
+    $totalPossibleMarks = $maxAssignmentMarks + $maxQuizMarks + $maxPracticalMarks + $maxModularMarks;
+
+    // Calculate overall percentage
+    $overallPercentage = ($totalMarksObtained / $totalPossibleMarks) * 100;
+
+    // Round the percentage to 2 decimal places
+    $overallPercentage = round($overallPercentage, 2);
+
     // Message for Student
     $studentMessage = "Dear *" . $record['studentname'] . "*,\n\n" .
     "Here is your progress report for the month of *" . $record['month'] . "*.\n\n" .
@@ -115,6 +133,7 @@ if (isset($_POST['batchfilter'], $_POST['monthfilter'], $_POST['yearfilter'])) {
     "*Quiz Marks:* " . ($record['quizmarksinternal'] > 0 ? $record['quizmarksinternal'] : 'Not Conducted') . "\n" .
     "*Practical Marks:* " . ($record['practical'] > 0 ? $record['practical'] : 'Not Conducted') . "\n" .
     "*Modular Marks:* " . ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted') . "\n" .
+    "*Overall Percentage:* " . $overallPercentage . "%\n" .
     "*Remarks:* " . (!empty($record['remarks']) ? $record['remarks'] : 'No Remarks') . "\n\n" .
     "Regards,\n*Aptech Scheme 33*";
 
@@ -129,6 +148,7 @@ if (isset($_POST['batchfilter'], $_POST['monthfilter'], $_POST['yearfilter'])) {
     "*Quiz Marks:* " . ($record['quizmarksinternal'] > 0 ? $record['quizmarksinternal'] : 'Not Conducted') . "\n" .
     "*Practical Marks:* " . ($record['practical'] > 0 ? $record['practical'] : 'Not Conducted') . "\n" .
     "*Modular Marks:* " . ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted') . "\n" .
+    "*Overall Percentage:* " . $overallPercentage . "%\n" .
     "*Remarks:* " . (!empty($record['remarks']) ? $record['remarks'] : 'No Remarks') . "\n\n" .
     "Regards,\n*Aptech Scheme 33 Center*";
 
@@ -136,24 +156,27 @@ if (isset($_POST['batchfilter'], $_POST['monthfilter'], $_POST['yearfilter'])) {
     $studentPhone = "https://wa.me/92" . ltrim($record['studentphoneno'], '0') . "?text=" . urlencode($studentMessage);
     $guardianPhone = "https://wa.me/92" . ltrim($record['studentguardianphoneno'], '0') . "?text=" . urlencode($guardianMessage);
 ?>
-    <tr>
-        <td><?php echo $record['enrollmentno']; ?></td>
-        <td><?php echo $record['studentname']; ?></td>
-        <td><?php echo $record['batchcode']; ?></td>
-        <td><?php echo $record['staffname']; ?></td>
-        <td><?php echo ($record['assignmentmarks'] > 0 ? $record['assignmentmarks'] : 'Not Conducted'); ?></td>
-        <td><?php echo ($record['quizmarksinternal'] > 0 ? $record['quizmarksinternal'] : 'Not Conducted'); ?></td>
-        <td><?php echo ($record['practical'] > 0 ? $record['practical'] : 'Not Conducted'); ?></td>
-        <td><?php echo ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted'); ?></td>
-        <td><?php echo (!empty($record['remarks']) ? $record['remarks'] : 'No Remarks'); ?></td>
-        <td>
-           <div class="d-flex">
-           <a href="<?php echo $studentPhone; ?>" target="_blank" class="btn btn-success btn-sm mx-2">To Student</a>
-           <a href="<?php echo $guardianPhone; ?>" target="_blank" class="btn btn-primary btn-sm">To Guardian</a>
-           </div>
-        </td>
-    </tr>
+
+<tr>
+    <td><?php echo $record['enrollmentno']; ?></td>
+    <td><?php echo $record['studentname']; ?></td>
+    <td><?php echo $record['batchcode']; ?></td>
+    <td><?php echo $record['staffname']; ?></td>
+    <td><?php echo ($record['assignmentmarks'] > 0 ? $record['assignmentmarks'] : 'Not Conducted'); ?></td>
+    <td><?php echo ($record['quizmarksinternal'] > 0 ? $record['quizmarksinternal'] : 'Not Conducted'); ?></td>
+    <td><?php echo ($record['practical'] > 0 ? $record['practical'] : 'Not Conducted'); ?></td>
+    <td><?php echo ($record['modular'] > 0 ? $record['modular'] : 'Not Conducted'); ?></td>
+    <td><?php echo (!empty($record['remarks']) ? $record['remarks'] : 'No Remarks'); ?></td>
+    <td>
+        <div class="d-flex">
+            <a href="<?php echo $studentPhone; ?>" target="_blank" class="btn btn-success btn-sm mx-2">To Student</a>
+            <a href="<?php echo $guardianPhone; ?>" target="_blank" class="btn btn-primary btn-sm">To Guardian</a>
+        </div>
+    </td>
+</tr>
+
 <?php } ?>
+
 
         </tbody>
     </table>

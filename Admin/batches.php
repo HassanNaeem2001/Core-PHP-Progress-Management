@@ -167,12 +167,25 @@ $(document).ready(function() {
 if (isset($_POST['delete_batch'])) {
     $batchid = $_POST['batchid'];
 
-    $deleteQuery = "DELETE FROM batches WHERE batchid = '$batchid'";
+    // First delete related assignments
+    $deleteAssignmentsQuery = "DELETE FROM assignments WHERE assignedto = ?";
+    $stmt1 = $conn->prepare($deleteAssignmentsQuery);
+    $stmt1->bind_param("i", $batchid);
+    $stmt1->execute();
+    $stmt1->close();
 
-    if (mysqli_query($conn, $deleteQuery)) {
+    // Now delete the batch
+    $deleteBatchQuery = "DELETE FROM batches WHERE batchid = ?";
+    $stmt2 = $conn->prepare($deleteBatchQuery);
+    $stmt2->bind_param("i", $batchid);
+
+    if ($stmt2->execute()) {
         echo "<script>alert('Batch deleted successfully'); window.location.href='batches.php';</script>";
     } else {
-        echo "<script>alert('Error deleting batch');</script>";
+        echo "<script>alert('Error deleting batch: " . addslashes($stmt2->error) . "');</script>";
     }
+
+    $stmt2->close();
 }
+
 ?>

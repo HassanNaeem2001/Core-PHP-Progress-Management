@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 02, 2025 at 05:54 PM
+-- Generation Time: Apr 10, 2025 at 12:39 PM
 -- Server version: 8.3.0
--- PHP Version: 8.2.18
+-- PHP Version: 8.3.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -45,6 +45,44 @@ INSERT INTO `admin` (`adminid`, `adminname`, `adminpassword`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `assignments`
+--
+
+DROP TABLE IF EXISTS `assignments`;
+CREATE TABLE IF NOT EXISTS `assignments` (
+  `assignmentid` int NOT NULL AUTO_INCREMENT,
+  `assignmentname` varchar(1000) DEFAULT NULL,
+  `assignmentdescription` varchar(1000) DEFAULT NULL,
+  `assignmentfile` varchar(1000) DEFAULT NULL,
+  `assignmentdeadline` date DEFAULT NULL,
+  `assignedto` int DEFAULT NULL,
+  `marks` int NOT NULL,
+  `uploadedby` int NOT NULL,
+  PRIMARY KEY (`assignmentid`),
+  KEY `assignedto` (`assignedto`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `assignments_uploaded`
+--
+
+DROP TABLE IF EXISTS `assignments_uploaded`;
+CREATE TABLE IF NOT EXISTS `assignments_uploaded` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `uploaded_by` int DEFAULT NULL,
+  `uploaded_file` varchar(255) DEFAULT NULL,
+  `uploaded_on` datetime DEFAULT CURRENT_TIMESTAMP,
+  `uploading_for` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `uploaded_by` (`uploaded_by`),
+  KEY `uploading_for` (`uploading_for`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `batches`
 --
 
@@ -61,15 +99,14 @@ CREATE TABLE IF NOT EXISTS `batches` (
   `batchstatus` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Active',
   PRIMARY KEY (`batchid`),
   KEY `batchinstructor` (`batchinstructor`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `batches`
 --
 
 INSERT INTO `batches` (`batchid`, `batchcode`, `batchtimings`, `batchdays`, `batchinstructor`, `currentsem`, `batchtype`, `batchstartdate`, `batchstatus`) VALUES
-(4, '2407A', '9-11', 'T.T.S', 7, 'DISM', 'ACCP', '2025-03-11', 'Active'),
-(6, '2408A', '9-11', 'T.T.S', 7, 'DISM', 'ACCP', '2025-04-03', 'Active');
+(8, '2408A', '9-11', 'T.T.S', 7, 'CPISM', 'ACCP', '2025-03-10', 'Active');
 
 -- --------------------------------------------------------
 
@@ -84,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `books` (
   `bookfile` mediumtext,
   `booksem` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`bookid`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `books`
@@ -93,7 +130,25 @@ CREATE TABLE IF NOT EXISTS `books` (
 INSERT INTO `books` (`bookid`, `bookname`, `bookfile`, `booksem`) VALUES
 (7, 'Programming with JS', '', 'DISM'),
 (8, 'Programming with JS 2', 'VIII_eng_lang.pdf', 'DISM'),
-(9, 'Database MYSQLi 2', 'All_Tools_to_Use_in_ACCP_AI_7144.pdf', 'DISM');
+(9, 'Database MYSQLi 2', 'All_Tools_to_Use_in_ACCP_AI_7144.pdf', 'DISM'),
+(10, 'Programming with javascript', 'mohsinkhan.rar', 'CPISM');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `exams`
+--
+
+DROP TABLE IF EXISTS `exams`;
+CREATE TABLE IF NOT EXISTS `exams` (
+  `examsid` int NOT NULL AUTO_INCREMENT,
+  `skillname` varchar(100) DEFAULT NULL,
+  `examtype` enum('Modular','Practical','Prepratory','Other') DEFAULT NULL,
+  `examdate` date DEFAULT NULL,
+  `examofbatch` int DEFAULT NULL,
+  PRIMARY KEY (`examsid`),
+  KEY `examofbatch` (`examofbatch`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -154,8 +209,7 @@ CREATE TABLE IF NOT EXISTS `staff` (
 
 INSERT INTO `staff` (`staffid`, `staffname`, `staffemail`, `staffpassword`, `staffdesignation`, `stafftimings`, `staffphone`, `dateofjoining`, `dateofresignation`, `status`) VALUES
 (4, 'Hassan', 'hassan@aptechgdn.net', '12345', 'Center Academic Head', 'Full Time', '03331267223', '2025-03-04', NULL, 'active'),
-(7, 'Hassan', 'hassan@aptechgdn.net', '12345', 'Faculty', 'Part Time', '03211267223', '2025-03-15', NULL, 'active'),
-(8, 'Hassan', 'hassan@aptechgdn.net', '12345', 'Center Academic Head', 'Part Time', '03211267223', '2025-03-15', NULL, 'active'),
+(7, 'Hassan', 'hassan@aptechgdn.net', '123456', 'Faculty', 'Part Time', '03211267223', '2025-03-15', NULL, 'active'),
 (9, 'Hassan', 'muneeb_hasham@hotmail.com', '12345', 'Center Manager', 'Full Time', '03211267223', '2025-03-12', NULL, 'active'),
 (11, 'Tabinda', 'tabinda@gmail.com', '123', 'Counselor', 'Full Time', '03332110982', '2025-04-02', NULL, 'active');
 
@@ -178,15 +232,14 @@ CREATE TABLE IF NOT EXISTS `student` (
   `studentstatus` varchar(10) NOT NULL,
   PRIMARY KEY (`studentid`),
   KEY `studentbatch` (`studentbatch`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `student`
 --
 
 INSERT INTO `student` (`studentid`, `studentname`, `enrollmentno`, `studentemail`, `studentpassword`, `studentbatch`, `studentphoneno`, `studentguardianphoneno`, `studentstatus`) VALUES
-(2, 'Muhammad Maaz', 'Student1535149', 'maaz@gmail.com', '202cb962ac59075b964b07152d234b70', 4, '03350242527', '03331267223', 'Active'),
-(3, 'Waiz jamal', 'student1535186', 'waiz@gmail.com', '202cb962ac59075b964b07152d234b70', 6, '03331267223', '03331267223', 'Active');
+(8, 'Waiz Jamals', 'Student123123', 'Student123123', 'd41d8cd98f00b204e9800998ecf8427e', 8, '03332110982', '03331267223', 'Active');
 
 -- --------------------------------------------------------
 
@@ -208,16 +261,14 @@ CREATE TABLE IF NOT EXISTS `studentprogress` (
   `dateofprogress` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`progressno`),
   KEY `studentid` (`studentid`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `studentprogress`
 --
 
 INSERT INTO `studentprogress` (`progressno`, `studentid`, `assignmentmarks`, `quizmarksinternal`, `practical`, `modular`, `classes_conducted`, `classes_held`, `remarks`, `dateofprogress`) VALUES
-(14, 2, 90, 80, 14, 12, 9, 13, 'Great Job Maaz', '2025-03-31 19:00:00'),
-(16, 2, 50, 80, 12, 10, 12, 12, 'Good Job', '2025-02-28 19:00:00'),
-(17, 3, 80, 90, 20, 15, 12, 12, 'good performance', '2025-03-31 19:00:00');
+(25, 8, 40, 50, 20, 10, 12, 15, 'Satisfied', '2025-02-28 19:00:00');
 
 -- --------------------------------------------------------
 
@@ -254,10 +305,29 @@ INSERT INTO `student_complaints` (`id`, `student_name`, `batch`, `faculty`, `com
 --
 
 --
+-- Constraints for table `assignments`
+--
+ALTER TABLE `assignments`
+  ADD CONSTRAINT `assignments_ibfk_1` FOREIGN KEY (`assignedto`) REFERENCES `batches` (`batchid`);
+
+--
+-- Constraints for table `assignments_uploaded`
+--
+ALTER TABLE `assignments_uploaded`
+  ADD CONSTRAINT `assignments_uploaded_ibfk_1` FOREIGN KEY (`uploaded_by`) REFERENCES `student` (`studentid`) ON DELETE CASCADE,
+  ADD CONSTRAINT `assignments_uploaded_ibfk_2` FOREIGN KEY (`uploading_for`) REFERENCES `assignments` (`assignmentid`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `batches`
 --
 ALTER TABLE `batches`
   ADD CONSTRAINT `batches_ibfk_1` FOREIGN KEY (`batchinstructor`) REFERENCES `staff` (`staffid`);
+
+--
+-- Constraints for table `exams`
+--
+ALTER TABLE `exams`
+  ADD CONSTRAINT `exams_ibfk_1` FOREIGN KEY (`examofbatch`) REFERENCES `batches` (`batchid`);
 
 --
 -- Constraints for table `sent_reports`

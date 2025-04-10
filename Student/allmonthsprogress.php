@@ -9,19 +9,23 @@ if (!isset($_SESSION['studentid'])) {
 }
 
 $query = mysqli_query($conn, "
-    SELECT 
-        assignmentmarks, 
-        quizmarksinternal, 
-        practical, 
-        modular, 
-        classes_conducted, 
-        classes_held, 
-        remarks, 
-        dateofprogress 
-    FROM studentprogress 
+   SELECT *
+FROM (
+    SELECT *,
+           ROW_NUMBER() OVER (
+               PARTITION BY YEAR(dateofprogress), MONTH(dateofprogress)
+               ORDER BY dateofprogress DESC
+           ) AS rn
+    FROM studentprogress
     WHERE studentid = {$_SESSION['studentid']}
-    ORDER BY dateofprogress DESC
+) AS monthly_progress
+WHERE rn = 1
+ORDER BY dateofprogress DESC;
+
+
 ");
+
+
 ?>
 <!doctype html>
 <html lang="en">

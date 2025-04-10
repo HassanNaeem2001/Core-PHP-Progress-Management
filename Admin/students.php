@@ -53,7 +53,7 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
             <form action="" method="post">
                 <input type="text" name="studentname" class="mt-2 form-control" placeholder="Enter Student Name" required>
                 <input type="text" name="enrollmentno" class="mt-2 form-control" placeholder="Enter Enrollment No" required>
-                <input type="email" name="studentemail" class="mt-2 form-control" placeholder="Enter Student Email" required>
+                <input type="text" name="studentemail" class="mt-2 form-control" placeholder="Enter Student Email or Student Id again" required>
                 <input type="password" name="studentpassword" class="mt-2 form-control" placeholder="Enter Password" required>
                 <select name="studentbatch" class="mt-2 w-100 p-1" required>
                     <option value="" selected disabled>Select Student Batch</option>
@@ -85,7 +85,8 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
                 <th>Batch</th>
                 <th>Status</th>
                 <th>Update Status</th>
-                <th>Actions</th> <!-- Added Actions column -->
+                <th>Actions</th>
+                <th>Edit Details</th> <!-- Added Actions column -->
             </tr>
         </thead>
         <tbody>
@@ -95,6 +96,7 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
                     <td><?php echo $row['studentname']; ?></td>
                     <td><?php echo $row['batchcode']; ?></td>
                     <td><span class="badge bg-<?php echo ($row['studentstatus'] == 'Active') ? 'success' : 'danger'; ?>"> <?php echo $row['studentstatus']; ?> </span></td>
+                    
                     <td>
                         <form method="post" action="">
                             <input type="hidden" name="student_id" value="<?php echo $row['studentid']; ?>">
@@ -113,6 +115,13 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
                             <button type="submit" class="btn btn-danger btn-sm" name="delete_student">Delete</button>
                         </form>
                     </td>
+                    <td>
+    <form method="get" action="edit_student.php">
+        <input type="hidden" name="student_id" value="<?php echo $row['studentid']; ?>">
+        <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+    </form>
+</td>
+
                 </tr>
             <?php } ?>
         </tbody>

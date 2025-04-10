@@ -76,10 +76,10 @@ if (isset($_POST['btnaddprogress'])) {
             <thead class="table-dark">
                 <tr>
                     <th>Student Name</th>
-                    <th>Assignment Marks</th>
-                    <th>Quiz Marks</th>
-                    <th>Practical Marks</th>
-                    <th>Modular Marks</th>
+                    <th>Assignment Marks (100)</th>
+                    <th>Quiz Marks (100)</th>
+                    <th>Practical Marks (20)</th>
+                    <th>Modular Marks (20)</th>
                     <th>Classes Attended</th>
                     <th>Classes Held</th>
                     <th>Remarks</th>

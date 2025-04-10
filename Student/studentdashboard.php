@@ -210,57 +210,12 @@ if (mysqli_num_rows($query) > 0) {
             </div>
         </div>
     </div>
-     <!-- Jobs Update Table -->
-     <div class="container-fluid mt-4 text-light d-flex justify-content-center">
-        <div class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-lg-10">
-                    <h4 class="text-dark headingfontstudent" style="font-size:25px">Jobs Update</h4>
-                    <div class="table-responsive">
-                        <table class="table table-dark table-striped table-bordered table-hover shadow-lg">
-                            <thead class="text-center">
-                                <tr>
-                                    <th>Job Title</th>
-                                    <th>Job Description</th>
-                                    <th>Apply Before</th>
-                                    <th>Operations</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php 
-                                $query = mysqli_query($conn, "
-                                    SELECT * from jobs
-                                        
-                                ");
-                                while($data = mysqli_fetch_array($query))
-                                {
-                                ?>
-                                <tr class="text-center">
-                                    <td><?php echo $data['jobtitle']?></td>
-                                    <td><?php echo $data['jobdescription']?></td>
-                                    <td><?php echo date('d M Y', strtotime($data['applybefore'])); ?></td>
-                                    <td>
-                                        <form action="" method="post">
-                                            <button type="submit" name="btnpplyforjob" class="btn btn-primary">Apply Now</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <?php
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-<!-- Assignments Table -->
-<div class="container-fluid mt-4 text-light d-flex justify-content-center">
+    <!-- Assignments Table -->
+<div class="container-fluid mt-4 text-light d-flex justify-content-center" id="assignments">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <h4 class="text-dark headingfontstudent" style="font-size:25px">Pending Assignments</h4>
+                <h4 class="text-dark headingfontstudent" style="font-size:25px">Your Assignments</h4>
                 <div class="table-responsive">
                 <?php
                 $studentId = $_SESSION['studentid'];
@@ -373,6 +328,52 @@ if (mysqli_num_rows($query) > 0) {
         </div>
     </div>
 </div>
+     <!-- Jobs Update Table -->
+     <div class="container-fluid mt-4 text-light d-flex justify-content-center">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <h4 class="text-dark headingfontstudent" style="font-size:25px">Jobs Update</h4>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped table-bordered table-hover shadow-lg">
+                            <thead class="text-center">
+                                <tr>
+                                    <th>Job Title</th>
+                                    <th>Job Description</th>
+                                    <th>Apply Before</th>
+                                    <th>Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
+                                $query = mysqli_query($conn, "
+                                    SELECT * from jobs
+                                        
+                                ");
+                                while($data = mysqli_fetch_array($query))
+                                {
+                                ?>
+                                <tr class="text-center">
+                                    <td><?php echo $data['jobtitle']?></td>
+                                    <td><?php echo $data['jobdescription']?></td>
+                                    <td><?php echo date('d M Y', strtotime($data['applybefore'])); ?></td>
+                                    <td>
+                                        <form action="" method="post">
+                                            <button type="submit" name="btnpplyforjob" class="btn btn-primary">Apply Now</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
       <!-- Exams Update Table -->
@@ -441,7 +442,7 @@ $examResult = $examQuery->get_result();
                         <input type="password" class="form-control" id="confirmpassword" name="confirmpassword" required>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100" name="btnupdatepassword">Update Password</button>
+                    <button type="submit" class="btn btn-warning w-100" name="btnupdatepassword">Update Password</button>
                 </form>
             </div>
         </div>

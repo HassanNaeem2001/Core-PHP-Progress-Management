@@ -36,7 +36,8 @@ $staffCounts = mysqli_fetch_assoc($staffCountsResult);
 </div>
 </center>
 
-
+<div class="container">
+    
     <!-- Student Counts -->
     <div class="row">
         <div class="col-md-4">
@@ -66,7 +67,7 @@ $staffCounts = mysqli_fetch_assoc($staffCountsResult);
     </div>
 
     <!-- Staff Counts -->
-    <div class="row">
+    <div class="row" >
         <div class="col-md-3">
             <div class="card text-white bg-info mb-3">
                 <div class="card-header">Counselors</div>
@@ -100,6 +101,7 @@ $staffCounts = mysqli_fetch_assoc($staffCountsResult);
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <?php
