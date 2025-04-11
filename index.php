@@ -6,10 +6,13 @@ $error = '';
 
 if (isset($_POST['btnlogin'])) {
     $email = mysqli_real_escape_string($conn, $_POST['username']);
-    $password = md5(mysqli_real_escape_string($conn, $_POST['password'])); // Hash input with MD5
+    $password = md5($_POST['password']); // Hash input with MD5
 
     // Fetch student details based on email
-    $query = mysqli_query($conn, "SELECT * FROM student WHERE studentemail='$email' OR enrollmentno='$email' LIMIT 1");
+    $query = mysqli_query($conn, "SELECT * FROM student 
+WHERE (studentemail = '$email' OR enrollmentno = '$email') 
+AND studentpassword = '$password' 
+LIMIT 1;");
 
     if (mysqli_num_rows($query) == 1) {
         $student = mysqli_fetch_assoc($query);

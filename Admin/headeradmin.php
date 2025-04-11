@@ -98,6 +98,9 @@ ob_start(); // Start output buffering to prevent header errors
                             <a class="dropdown-item" href="monthlysar.php"
                                 >Generate Monthly SAR</a
                             >
+                            <a class="dropdown-item" href="quarterwise.php"
+                                >Quarter Wise SAR</a
+                            >
                         </div>
                     </li>
                     <li>
