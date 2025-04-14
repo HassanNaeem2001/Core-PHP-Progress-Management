@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 10, 2025 at 12:39 PM
+-- Generation Time: Apr 14, 2025 at 12:58 PM
 -- Server version: 8.3.0
 -- PHP Version: 8.3.6
 
@@ -232,14 +232,15 @@ CREATE TABLE IF NOT EXISTS `student` (
   `studentstatus` varchar(10) NOT NULL,
   PRIMARY KEY (`studentid`),
   KEY `studentbatch` (`studentbatch`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `student`
 --
 
 INSERT INTO `student` (`studentid`, `studentname`, `enrollmentno`, `studentemail`, `studentpassword`, `studentbatch`, `studentphoneno`, `studentguardianphoneno`, `studentstatus`) VALUES
-(8, 'Waiz Jamals', 'Student123123', 'Student123123', 'd41d8cd98f00b204e9800998ecf8427e', 8, '03332110982', '03331267223', 'Active');
+(8, 'Waiz Jamals', 'Student123123', 'Student123123', 'd41d8cd98f00b204e9800998ecf8427e', 8, '03332110982', '03331267223', 'Active'),
+(9, 'abdul rehman', 'Student123456', 'Student123456', '777c39276c0b7ef5bc9d2a0e778916f5', 8, '03332110982', '03331267223', 'Active');
 
 -- --------------------------------------------------------
 
@@ -261,14 +262,16 @@ CREATE TABLE IF NOT EXISTS `studentprogress` (
   `dateofprogress` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`progressno`),
   KEY `studentid` (`studentid`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `studentprogress`
 --
 
 INSERT INTO `studentprogress` (`progressno`, `studentid`, `assignmentmarks`, `quizmarksinternal`, `practical`, `modular`, `classes_conducted`, `classes_held`, `remarks`, `dateofprogress`) VALUES
-(25, 8, 40, 50, 20, 10, 12, 15, 'Satisfied', '2025-02-28 19:00:00');
+(25, 8, 40, 50, 20, 10, 12, 15, 'Satisfied', '2025-02-28 19:00:00'),
+(26, 8, 10, 10, 10, 10, 10, 10, 'Satisfied', '2025-04-14 19:00:00'),
+(27, 9, 10, 10, 10, 10, 10, 10, 'Satisfied', '2025-04-14 19:00:00');
 
 -- --------------------------------------------------------
 
