@@ -1,3 +1,7 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -14,6 +18,9 @@ $enrollmentNo = '';
 $selectedQuarter = '';
 $studentDetails = null;
 $progressData = [];
+$attendanceHeld = [];
+$attendanceAttended = [];
+$studentPhone = '';
 
 $quarterMonths = [
     1 => [1, 2, 3],
@@ -27,30 +34,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selectedQuarter = $_POST['quarter'] ?? '';
 
     if (!empty($enrollmentNo)) {
-        // Get student info + batch data (currentsem, instructor)
-        $stmt = $conn->prepare("
-            SELECT s.studentid, s.studentname, s.enrollmentno, s.studentbatch, 
-                   b.batchcode, b.currentsem, b.batchinstructor
-            FROM student s
-            LEFT JOIN batches b ON s.studentbatch = b.batchcode
-            WHERE s.enrollmentno = ?
-        ");
+        $stmt = $conn->prepare("SELECT s.studentid, s.studentname, s.enrollmentno, s.studentbatch, s.studentphoneno, b.batchcode, b.currentsem, st.staffname FROM student s LEFT JOIN batches b ON s.studentbatch = b.batchid LEFT JOIN staff st ON b.batchinstructor = st.staffid WHERE s.enrollmentno = ?");
         $stmt->bind_param("s", $enrollmentNo);
         $stmt->execute();
         $result = $stmt->get_result();
         $studentDetails = $result->fetch_assoc();
+        $studentPhone = $studentDetails['studentphoneno'] ?? '';
         $stmt->close();
 
         if ($studentDetails) {
             $studentId = $studentDetails['studentid'];
-            $stmt = $conn->prepare("
-                SELECT YEAR(dateofprogress) AS year, MONTH(dateofprogress) AS month,
-                       assignmentmarks, quizmarksinternal, modular, practical,
-                       classes_conducted, classes_held, remarks 
-                FROM studentprogress 
-                WHERE studentid = ?
-                ORDER BY dateofprogress ASC
-            ");
+            $stmt = $conn->prepare("SELECT YEAR(dateofprogress) AS year, MONTH(dateofprogress) AS month, assignmentmarks, quizmarksinternal, modular, practical, classes_conducted, classes_held, remarks FROM studentprogress WHERE studentid = ? ORDER BY dateofprogress ASC");
             $stmt->bind_param("i", $studentId);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -59,6 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $month = (int)$row['month'];
                 if ($selectedQuarter && in_array($month, $quarterMonths[$selectedQuarter])) {
                     $progressData[$month][] = $row;
+                    $attendanceHeld[$month] = $row['classes_held'] ?? '-';
+                    $attendanceAttended[$month] = $row['classes_conducted'] ?? '-';
                 }
             }
             $stmt->close();
@@ -67,18 +63,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+
 <style>
     .table thead th {
         background-color: orange !important;
-        color: white !important;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: black !important;
+        font-family: 'Times New Roman', Times, serif;
     }
     h5.section-heading {
         background: orange;
-        color: white;
+        color: black;
         padding: 10px;
         margin-top: 30px;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Oswald', sans-serif;
+        text-align: center;
+    }
+    tr {
+        border: 1px solid black !important;
     }
 </style>
 
@@ -106,82 +108,106 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 
     <?php if ($studentDetails && !empty($progressData)): ?>
+        <?php
+        $monthsInQuarter = $quarterMonths[(int)$selectedQuarter];
+        $monthNames = array_map(fn($m) => date('M', mktime(0, 0, 0, $m, 10)), $monthsInQuarter);
+
+        $assignments = $quizzes = $modulars = $practicals = $attendanceHeld = $attendanceConducted = [];
+
+        foreach ($monthsInQuarter as $month) {
+            $entry = $progressData[$month][0] ?? null;
+            $assignments[$month] = $entry['assignmentmarks'] ?? '-';
+            $quizzes[$month] = $entry['quizmarksinternal'] ?? '-';
+            $modulars[$month] = $entry['modular'] ?? '-';
+            $practicals[$month] = $entry['practical'] ?? '-';
+            $attendanceHeld[$month] = isset($entry['classes_held']) ? $entry['classes_held'] . " Classes" : '- Classes';
+            $attendanceConducted[$month] = $entry['classes_conducted'] ?? '-';
+        }
+        ?>
+
         <div id="report" style="border: 2px solid #000; padding: 20px; background: #f9f9f9;">
             <div style="text-align: center;">
                 <img src="../Images/aptlogo.png" alt="Aptech Logo" style="height: 150px;">
                 <h4>APTECH LEARNING</h4>
-                <h5>SCHEME-33 CENTER</h5>
-                <h5>STUDENT APPRAISAL REPORT</h5>
+                <h5>SCHEME 33 CENTER</h5>
+                <h5 style="text-decoration: underline;">Student Appraisal Report <?= date('M', mktime(0, 0, 0, $monthsInQuarter[0])) ?> - <?= date('M Y', mktime(0, 0, 0, end($monthsInQuarter))) ?></h5>
             </div>
 
             <table class="table table-bordered mt-3">
                 <tr>
-                    <td><strong>Enrollment No</strong></td><td><?= safe($studentDetails['enrollmentno']) ?></td>
-                    <td><strong>Student Name</strong></td><td><?= safe($studentDetails['studentname']) ?></td>
+                    <td><strong>Student ID:</strong></td><td><?= safe($studentDetails['enrollmentno']) ?></td>
                 </tr>
                 <tr>
-                    <td><strong>Faculty</strong></td><td><?= safe($studentDetails['batchinstructor']) ?></td>
-                    <td><strong>Batch Code</strong></td><td><?= safe($studentDetails['batchcode']) ?></td>
+                    <td><strong>Student Name:</strong></td><td><?= safe($studentDetails['studentname']) ?></td>
                 </tr>
                 <tr>
-                    <td><strong>Current Semester</strong></td><td><?= safe($studentDetails['currentsem']) ?></td>
-                    <td><strong>Quarter</strong></td><td>Q<?= safe($selectedQuarter) ?></td>
+                    <td><strong>Faculty:</strong></td><td><?= safe($studentDetails['staffname']) ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Course Enrolled:</strong></td><td><?= safe($studentDetails['currentsem']) ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Batch Code:</strong></td><td><?= safe($studentDetails['batchcode']) ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Current Semester:</strong></td><td><?= safe($studentDetails['currentsem']) ?></td>
                 </tr>
             </table>
 
-            <?php foreach ($progressData as $month => $entries): ?>
-                <?php 
-                    $entry = $entries[0]; // Only 1 entry per month expected
-                    $assignment = (int)$entry['assignmentmarks'];
-                    $quiz = (int)$entry['quizmarksinternal'];
-                    $modular = (int)$entry['modular'];
-                    $practical = (int)$entry['practical'];
-                    $totalObtained = $assignment + $quiz + $modular + $practical;
-                    $totalMarks = 20 + 20 + 100 + 20;
-                    $percentage = round(($totalObtained / $totalMarks) * 100, 2);
-                ?>
-                <h5 class="section-heading">Progress for the Month of <?= date('F', mktime(0, 0, 0, $month, 1)) ?></h5>
+            <!-- Assignments -->
+            <table class="table table-bordered text-center">
+                <thead><tr><?php foreach ($monthsInQuarter as $month): ?><th>Assignment <?= date('M', mktime(0, 0, 0, $month)) ?> (100)</th><?php endforeach; ?></tr></thead>
+                <tbody><tr><?php foreach ($assignments as $val): ?><td><?= safe($val) ?></td><?php endforeach; ?></tr></tbody>
+            </table>
 
-                <table class="table table-bordered text-center">
-                    <thead>
-                        <tr><th>Classes Held</th><th>Classes Attended</th><th>Late Comings</th><th>Absents</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><?= safe($entry['classes_conducted']) ?></td>
-                            <td><?= safe($entry['classes_held']) ?></td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Quizzes -->
+            <table class="table table-bordered text-center">
+                <thead><tr><?php foreach ($monthsInQuarter as $month): ?><th>Quiz <?= date('M', mktime(0, 0, 0, $month)) ?> (100)</th><?php endforeach; ?></tr></thead>
+                <tbody><tr><?php foreach ($quizzes as $val): ?><td><?= safe($val) ?></td><?php endforeach; ?></tr></tbody>
+            </table>
 
-                <table class="table table-bordered text-center">
-                    <thead>
-                        <tr><th>Assignments (20)</th><th>Quizzes (20)</th><th>Modular (100)</th><th>Practical (20)</th><th>Percentage</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><?= safe($assignment) ?></td>
-                            <td><?= safe($quiz) ?></td>
-                            <td><?= safe($modular) ?></td>
-                            <td><?= safe($practical) ?></td>
-                            <td><?= $percentage ?>%</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p><strong>Remarks:</strong> <?= safe($entry['remarks']) ?></p>
-            <?php endforeach; ?>
+            <!-- Attendance -->
+            <table class="table table-bordered text-center">
+                <thead>
+                <tr>
+                        <?php foreach ($monthsInQuarter as $month): ?>
+                            <th>Classes Held - <?= date('M', mktime(0, 0, 0, $month)) ?></th>
+                        <?php endforeach; ?>
+                    </tr>
+                    
+                    <tr>
+                        <?php foreach ($attendanceHeld as $val): ?>
+                            <td><?= safe($val) ?></td>
+                        <?php endforeach; ?>
+                    </tr>
+                   <tr style="border:none !important;">
+                    <td></td>
+                    <td></td>
+                   </tr>
+                  
+                </thead>
+                <tbody>
+                <tr>
+                        <?php foreach ($monthsInQuarter as $month): ?>
+                            <th style="background-color:orange !important;font-family: 'Times New Roman'">Classes Attended - <?= date('M', mktime(0, 0, 0, $month)) ?></th>
+                        <?php endforeach; ?>
+                    </tr>
+                    <tr>
+                        <?php foreach ($attendanceAttended as $val): ?>
+                            <td><?= safe($val) ?> - Classes</td>
+                        <?php endforeach; ?>
+                    </tr>
+                    
+                </tbody>
+            </table>
 
             <div class="d-flex justify-content-between mt-4">
-                <div><strong>Sent By:</strong><br>Counselor</div>
-                <div><strong>Academic Head</strong><br><br>___________________</div>
-                <div><strong>Center Manager</strong><br><br>___________________</div>
+                <div><strong>Center Manager Signature</strong><br><br>___________________</div>
+                <div><strong>Center Academic Head Signature</strong><br><br>___________________</div>
             </div>
 
-            <div class="text-center mt-3 fw-bold">
-                Contact No : 0334 0621597 &nbsp; | &nbsp; PTCL : 021 - 34693992-3
+            <div class="text-center mt-3 fw-bold" style="background: orange; padding: 10px;">
+                Contact No: 021-34664922-3 &nbsp; 0336-2197164
             </div>
         </div>
     <?php elseif ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
@@ -189,4 +215,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 </div>
 
+
+<button id="saveScreenshot" class="btn btn-primary mt-4">Copy Report Screenshot</button>
+
+<script>
+    const studentPhone = "<?= preg_replace('/[^0-9]/', '', $studentPhone) ?>"; // Clean to keep only digits
+</script>
+
 <?php include('footeradmin.php'); ob_end_flush(); ?>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+document.getElementById('saveScreenshot').addEventListener('click', function () {
+    const report = document.getElementById('report');
+    if (!report) {
+        alert('No report to capture.');
+        return;
+    }
+
+    html2canvas(report, { scale: 2 }).then(canvas => {
+        canvas.toBlob(async function (blob) {
+            try {
+                await navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': blob })
+                ]);
+                alert('Screenshot copied to clipboard! Now opening WhatsApp...');
+                
+                // WhatsApp format: use country code (e.g. 92 for Pakistan)
+                if (studentPhone) {
+                    const whatsappUrl = `https://wa.me/${studentPhone}`;
+                    window.open(whatsappUrl, '_blank');
+                } else {
+                    alert('Student phone number is missing!');
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert('Failed to copy screenshot. Try using Chrome and make sure you\'re on HTTPS or localhost.');
+            }
+        });
+    });
+});
+</script>
+
