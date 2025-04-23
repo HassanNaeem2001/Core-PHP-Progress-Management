@@ -68,12 +68,17 @@ if(isset($_POST['btnregisterfaculty'])) {
 
         <label for="date" class="mt-2"><b>Date of Joining</b></label>
         <input type="date" class="form-control w-100" name="date" required />
+        <button type="submit" class="btn btn-dark mt-2 float-end w-50 m-2" name="btnregisterfaculty">Register Staff</button>
+        
 
-        <button type="submit" class="btn btn-dark mt-2 float-end w-50" name="btnregisterfaculty">Register Staff</button>
     </form>
+    <button onclick="window.location.href='dashboard.php'" class="btn btn-warning mt-2 float-end">Go Back</button>
     </div>
+
    </div>
+
 </div>
+
 
 <!-- View Staff -->
 <div class="container-fluid mt-5">

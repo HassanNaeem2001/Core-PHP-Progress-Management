@@ -21,6 +21,7 @@ $progressData = [];
 $attendanceHeld = [];
 $attendanceAttended = [];
 $studentPhone = '';
+$parentPhone = '';
 
 $quarterMonths = [
     1 => [1, 2, 3],
@@ -34,12 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selectedQuarter = $_POST['quarter'] ?? '';
 
     if (!empty($enrollmentNo)) {
-        $stmt = $conn->prepare("SELECT s.studentid, s.studentname, s.enrollmentno, s.studentbatch, s.studentphoneno, b.batchcode, b.currentsem, st.staffname FROM student s LEFT JOIN batches b ON s.studentbatch = b.batchid LEFT JOIN staff st ON b.batchinstructor = st.staffid WHERE s.enrollmentno = ?");
+        $stmt = $conn->prepare("SELECT s.studentid, s.studentname, s.enrollmentno, s.studentbatch, s.studentphoneno, b.batchcode, b.currentsem, st.staffname, s.studentguardianphoneno FROM student s LEFT JOIN batches b ON s.studentbatch = b.batchid LEFT JOIN staff st ON b.batchinstructor = st.staffid WHERE s.enrollmentno = ?");
         $stmt->bind_param("s", $enrollmentNo);
         $stmt->execute();
         $result = $stmt->get_result();
         $studentDetails = $result->fetch_assoc();
         $studentPhone = $studentDetails['studentphoneno'] ?? '';
+        $parentPhone = $studentDetails['studentguardianphoneno'] ?? '';
+
         $stmt->close();
 
         if ($studentDetails) {
@@ -125,7 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         ?>
 
-        <div id="report" style="border: 2px solid #000; padding: 20px; background: #f9f9f9;">
+       <center>
+       <div id="report" style="border: 2px solid #000; padding: 20px; background: #f9f9f9;width:800px">
             <div style="text-align: center;">
                 <img src="../Images/aptlogo.png" alt="Aptech Logo" style="height: 150px;">
                 <h4>APTECH LEARNING</h4>
@@ -143,9 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <tr>
                     <td><strong>Faculty:</strong></td><td><?= safe($studentDetails['staffname']) ?></td>
                 </tr>
-                <tr>
-                    <td><strong>Course Enrolled:</strong></td><td><?= safe($studentDetails['currentsem']) ?></td>
-                </tr>
+                
                 <tr>
                     <td><strong>Batch Code:</strong></td><td><?= safe($studentDetails['batchcode']) ?></td>
                 </tr>
@@ -189,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <tbody>
                 <tr>
                         <?php foreach ($monthsInQuarter as $month): ?>
-                            <th style="background-color:orange !important;font-family: 'Times New Roman'">Classes Attended - <?= date('M', mktime(0, 0, 0, $month)) ?></th>
+                            <th style="background-color:black;color:white; !important;font-family: 'Times New Roman'">Classes Attended - <?= date('M', mktime(0, 0, 0, $month)) ?></th>
                         <?php endforeach; ?>
                     </tr>
                     <tr>
@@ -202,30 +204,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </table>
 
             <div class="d-flex justify-content-between mt-4">
-                <div><strong>Center Manager Signature</strong><br><br>___________________</div>
-                <div><strong>Center Academic Head Signature</strong><br><br>___________________</div>
-            </div>
+    <div style="text-align: center;">
+        
+        <img src="../Images/cmsignature.png" alt="Manager Signature" style="height: 80px;"><br>
+       
+        ________________________________
+        <br>
+
+        <strong>Center Manager</strong><br>
+    </div>
+    <div style="text-align: center;">
+        
+        <img src="../Images/cahsignature.png"  alt="Academic Head Signature" style="height: 80px;"><br>
+        ________________________________
+        <br>
+
+        <strong>Center Academic Head</strong><br>
+    </div>
+</div>
+
 
             <div class="text-center mt-3 fw-bold" style="background: orange; padding: 10px;">
                 Contact No: 021-34664922-3 &nbsp; 0336-2197164
             </div>
         </div>
+       </center>
     <?php elseif ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
         <div class="alert alert-warning">No data found for the selected quarter and enrollment number.</div>
     <?php endif; ?>
 </div>
 
 
-<button id="saveScreenshot" class="btn btn-primary mt-4">Copy Report Screenshot</button>
+<div class="d-flex justify-content-center align-items-center">
+    <button id="sendToStudent" class="btn btn-dark w-25 mt-4 m-3">Send Report to Student</button>
+    <button id="sendToParent" class="btn btn-dark w-25 mt-4 m-3">Send Report to Parent</button>
+    <button class="btn btn-dark mt-4 w-25 m-3" onclick="printReport()">Print Report</button>
 
+</div>
+
+
+
+<?php
+function formatPhoneForWhatsApp($phone) {
+    $clean = preg_replace('/[^0-9]/', '', $phone);
+    return (strpos($clean, '0') === 0) ? '92' . substr($clean, 1) : $clean;
+}
+
+$studentPhoneFormatted = formatPhoneForWhatsApp($studentPhone);
+$parentPhoneFormatted = formatPhoneForWhatsApp($parentPhone);
+
+?>
 <script>
-    const studentPhone = "<?= preg_replace('/[^0-9]/', '', $studentPhone) ?>"; // Clean to keep only digits
+    const studentPhone = "<?= $studentPhoneFormatted ?>";
+    const parentPhone = "<?= $parentPhoneFormatted ?>";
 </script>
+
 
 <?php include('footeradmin.php'); ob_end_flush(); ?>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
-document.getElementById('saveScreenshot').addEventListener('click', function () {
+
+function sendReportToWhatsApp(phoneNumber) {
     const report = document.getElementById('report');
     if (!report) {
         alert('No report to capture.');
@@ -240,20 +279,49 @@ document.getElementById('saveScreenshot').addEventListener('click', function () 
                 ]);
                 alert('Screenshot copied to clipboard! Now opening WhatsApp...');
                 
-                // WhatsApp format: use country code (e.g. 92 for Pakistan)
-                if (studentPhone) {
-                    const whatsappUrl = `https://wa.me/${studentPhone}`;
+                if (phoneNumber) {
+                    const whatsappUrl = `https://wa.me/${phoneNumber}`;
                     window.open(whatsappUrl, '_blank');
                 } else {
-                    alert('Student phone number is missing!');
+                    alert('Phone number is missing!');
                 }
 
             } catch (err) {
                 console.error(err);
-                alert('Failed to copy screenshot. Try using Chrome and make sure you\'re on HTTPS or localhost.');
+                alert('Failed to copy screenshot. Use Chrome on HTTPS or localhost.');
             }
         });
     });
+}
+
+document.getElementById('sendToStudent').addEventListener('click', function () {
+    sendReportToWhatsApp(studentPhone);
 });
+
+document.getElementById('sendToParent').addEventListener('click', function () {
+    sendReportToWhatsApp(parentPhone);
+});
+function printReport() {
+    const reportContent = document.getElementById('report').innerHTML;
+    const win = window.open('', '', 'width=900,height=700');
+    win.document.write(`
+        <html>
+            <head>
+                <title>Student Appraisal Report</title>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                <style>
+                    body { font-family: 'Times New Roman', serif; padding: 20px; }
+                    .table th, .table td { border: 1px solid black !important; }
+                    .text-center { text-align: center; }
+                    h4, h5 { margin: 0; }
+                </style>
+            </head>
+            <body onload="window.print(); window.close();">
+                ${reportContent}
+            </body>
+        </html>
+    `);
+    win.document.close();
+}
 </script>
 

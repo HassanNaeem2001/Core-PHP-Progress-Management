@@ -65,7 +65,7 @@ ob_start(); // Start output buffering to prevent header errors
                         <a class="nav-link" href="postjobs.php">Jobs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="exams.php">Exams</a>
+                        <a class="nav-link" href="viewcomplaints.php">Complaints</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a
@@ -87,6 +87,9 @@ ob_start(); // Start output buffering to prevent header errors
                             <a class="dropdown-item" href="batches.php"
                                 >Batches</a
                             >
+                            <a class="dropdown-item" href="exams.php"
+                                >Exams</a
+                            >
                             <hr>
                             <a class="dropdown-item" href="progressreports.php"
                                 >Add Student Progress</a
@@ -101,6 +104,27 @@ ob_start(); // Start output buffering to prevent header errors
                             <a class="dropdown-item" href="quarterwise.php"
                                 >Quarter Wise SAR</a
                             >
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="dropdownId"
+                            data-bs-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            >Reminders</a
+                        >
+                        <div
+                            class="dropdown-menu"
+                            aria-labelledby="dropdownId"
+                        >
+                            <a class="dropdown-item" href="followups.php"
+                                >Send Message</a
+                            >
+                            
+                            
                         </div>
                     </li>
                     <li>

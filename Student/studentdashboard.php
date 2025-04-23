@@ -45,7 +45,7 @@ ob_start();
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="allmonthsprogress.php">Over All Progress</a></li>
                             <li><a class="dropdown-item" href="studentdashboard.php">Jobs</a></li>
-                            <li><a class="dropdown-item" href="#">Attendance</a></li>
+                            <li><a class="dropdown-item" href="#">Recorded Lectures</a></li>
                         </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="#">Feedback</a></li>
@@ -89,6 +89,7 @@ ob_start();
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th>Faculty</th>
+                                        <th>Recorded Lectures</th>
                                         <th>Current Semester</th>
                                         <th>Update Password</th>
                                     </tr>
@@ -113,6 +114,13 @@ ob_start();
                                         <td><?php echo $_SESSION['studentemail']; ?></td>
                                         <td><?php echo $_SESSION['studentphoneno']; ?></td>
                                         <td><?php echo $data['staffname']; ?></td>
+                                        
+                                        <td>
+                                            <?php
+                                            $batchCode = $data['batchcode']; 
+                                            $githubRepoLink = "https://github.com/AptechScheme33/{$batchCode}";?>
+                                            <a href="<?php echo $githubRepoLink?>" class="btn btn-warning">View Recordings</a>
+                                        </td>
                                         <td><?php echo $data['currentsem']; ?></td>
                                         <td>
     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updatePasswordModal">Update Password</button>
@@ -210,6 +218,7 @@ if (mysqli_num_rows($query) > 0) {
             </div>
         </div>
     </div>
+ 
     <!-- Assignments Table -->
 <div class="container-fluid mt-4 text-light d-flex justify-content-center" id="assignments">
     <div class="container-fluid">

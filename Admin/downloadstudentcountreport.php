@@ -1,12 +1,10 @@
 <?php
-require '../vendor/autoload.php'; // Adjust path if needed
+require '../vendor/autoload.php';
 include('../connect.php');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\Color;
-use PhpOffice\PhpSpreadsheet\Style\Font;
 
 $type = $_GET['type'];
 
@@ -27,56 +25,56 @@ switch ($type) {
         die("Invalid report type.");
 }
 
-// Fetch data
+// Fetch data using proper joins to get faculty name
 $query = "
     SELECT 
         s.studentname, 
         s.enrollmentno, 
-        s.studentemail, 
-        b.batchcode AS batchcode, 
-        sc.faculty,
-        s.studentstatus 
+        s.course_code,
+        b.batchcode,
+        st.staffname AS faculty,
+        s.studentstatus
     FROM student s
     LEFT JOIN batches b ON s.studentbatch = b.batchid
-    LEFT JOIN student_complaints sc ON sc.student_name = s.studentname
+    LEFT JOIN staff st ON b.batchinstructor = st.staffid
     WHERE s.studentstatus = '$status'
     GROUP BY s.studentid
 ";
 
 $result = mysqli_query($conn, $query);
 
-// Initialize spreadsheet
+// Create spreadsheet
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
-// Headers
-$headers = ['Name', 'Enrollment No', 'Email', 'Batch Code', 'Faculty', 'Status'];
+// Set header row
+$headers = ['S.No', 'Name', 'Enrollment No', 'Course Code', 'Batch Code', 'Faculty', 'Status'];
 $sheet->fromArray($headers, NULL, 'A1');
 
-// Style headers
-$styleArray = [
-    'font' => [
-        'bold' => true,
-        'color' => ['rgb' => 'FFFFFF'],
-    ],
-    'fill' => [
-        'fillType' => Fill::FILL_SOLID,
-        'startColor' => ['rgb' => '000000'],
-    ],
-];
+// Style header row
+$sheet->getStyle('A1:G1')->applyFromArray([
+    'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+    'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '000000']]
+]);
 
-$sheet->getStyle('A1:F1')->applyFromArray($styleArray);
-
-// Add data
+// Fill data rows
 $rowNum = 2;
+$serial = 1;
 while ($row = mysqli_fetch_assoc($result)) {
-    $sheet->setCellValue("A{$rowNum}", $row['studentname']);
-    $sheet->setCellValue("B{$rowNum}", $row['enrollmentno']);
-    $sheet->setCellValue("C{$rowNum}", $row['studentemail']);
-    $sheet->setCellValue("D{$rowNum}", $row['batchcode']);
-    $sheet->setCellValue("E{$rowNum}", $row['faculty']);
-    $sheet->setCellValue("F{$rowNum}", $row['studentstatus']);
+    $sheet->setCellValue("A{$rowNum}", $serial);
+    $sheet->setCellValue("B{$rowNum}", $row['studentname']);
+    $sheet->setCellValue("C{$rowNum}", $row['enrollmentno']);
+    $sheet->setCellValue("D{$rowNum}", $row['course_code']);
+    $sheet->setCellValue("E{$rowNum}", $row['batchcode']);
+    $sheet->setCellValue("F{$rowNum}", $row['faculty']);
+    $sheet->setCellValue("G{$rowNum}", $row['studentstatus']);
     $rowNum++;
+    $serial++;
+}
+
+// Auto adjust column widths
+foreach (range('A', 'G') as $col) {
+    $sheet->getColumnDimension($col)->setAutoSize(true);
 }
 
 // Output to browser

@@ -20,13 +20,14 @@ if (isset($_POST['update_student'])) {
     $studentemail = $_POST['studentemail'];
     $studentpassword = isset($_POST['studentpassword']) ? md5($_POST['studentpassword']) : $student['studentpassword'];
     $studentbatch = $_POST['studentbatch'];
+    $course_code = $_POST['course_code']; // New field
     $studentphoneno = $_POST['studentphoneno'];
     $studentguardianphoneno = $_POST['studentguardianphoneno'];
     $studentstatus = $_POST['studentstatus'];
 
     // Update the student information in the database
     $updateQuery = "UPDATE student SET studentname='$studentname', enrollmentno='$enrollmentno', studentemail='$studentemail', 
-                    studentpassword='$studentpassword', studentbatch='$studentbatch', studentphoneno='$studentphoneno', 
+                    studentpassword='$studentpassword', studentbatch='$studentbatch', course_code='$course_code', studentphoneno='$studentphoneno', 
                     studentguardianphoneno='$studentguardianphoneno', studentstatus='$studentstatus' WHERE studentid='$student_id'";
 
     if (mysqli_query($conn, $updateQuery)) {
@@ -59,6 +60,7 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
                 </option>
             <?php } ?>
         </select>
+        <input type="text" name="course_code" class="mt-2 form-control" placeholder="Enter Course Code" value="<?= $student['course_code'] ?>" required>
         <input type="text" name="studentphoneno" class="mt-2 form-control" placeholder="Enter Student Phone No" value="<?= $student['studentphoneno'] ?>" required>
         <input type="text" name="studentguardianphoneno" class="mt-2 form-control" placeholder="Enter Guardian Phone No" value="<?= $student['studentguardianphoneno'] ?>" required>
         <select name="studentstatus" class="mt-2 form-control" required>
@@ -66,6 +68,7 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
             <option value="Inactive" <?= ($student['studentstatus'] == 'Inactive') ? 'selected' : '' ?>>Inactive</option>
         </select>
         <button type="submit" class="btn btn-dark float-end w-50 mt-2 w-50" name="update_student">Update Student</button>
+        <button onclick="window.location.href='students.php'" class="btn btn-warning mt-3">Go Back</button>
     </form>
 </div>
 

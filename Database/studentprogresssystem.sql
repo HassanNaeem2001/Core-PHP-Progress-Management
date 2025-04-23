@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 14, 2025 at 12:58 PM
+-- Generation Time: Apr 17, 2025 at 01:22 PM
 -- Server version: 8.3.0
 -- PHP Version: 8.3.6
 
@@ -24,6 +24,45 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `absent_messages`
+--
+
+DROP TABLE IF EXISTS `absent_messages`;
+CREATE TABLE IF NOT EXISTS `absent_messages` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `enrollment_no` varchar(50) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `batch` varchar(50) DEFAULT NULL,
+  `recipient` enum('student','guardian') DEFAULT NULL,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `message` text,
+  `sent_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `absent_messages`
+--
+
+INSERT INTO `absent_messages` (`id`, `enrollment_no`, `name`, `batch`, `recipient`, `phone_number`, `message`, `sent_at`) VALUES
+(1, 'Student123123', 'Waiz Jamals', '2408A', 'student', NULL, 'Dear Waiz Jamals,\n\nThis is a formal notice from Aptech Scheme 33 Center. Our records show that you were absent in today\'s class. Kindly explain the reason for your absence. We expect your cooperation.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:13:45'),
+(2, 'Student123123', 'Waiz Jamals', '2408A', 'student', '03332110982', 'Dear Waiz Jamals,\n\nThis is a formal notice from Aptech Scheme 33 Center. Our records show that you were absent in today\'s class. Kindly explain the reason for your absence. We expect your cooperation.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:14:01'),
+(3, 'Student123123', 'Waiz Jamals', '2408A', 'guardian', '03331267223', 'Dear Guardian of Waiz Jamals,\n\nThis is a formal notice from Aptech Scheme 33 Center. Our records show that you were absent in today\'s class. Kindly explain the reason for your absence. We expect your cooperation.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:14:10'),
+(4, 'Student123123', 'Waiz Jamals', '2408A', 'student', '+92', 'Dear Waiz Jamals,\n\nThis is a formal notice from Aptech Scheme 33 Center. Our records show that you were absent in today\'s class. Kindly explain the reason for your absence. We expect your cooperation.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:16:14'),
+(5, 'Student123123', 'Waiz Jamals', '2408A', 'student', '92', 'Dear Waiz Jamals,\n\nThis is a formal notice from Aptech Scheme 33 Center. Our records show that you were absent in today\'s class. Kindly explain the reason for your absence. We expect your cooperation.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:19:56'),
+(6, 'Student123123', 'Waiz Jamals', '2408A', 'student', '92', 'Dear Waiz Jamals,\n\nThis is a formal notice from Aptech Scheme 33 Center. Our records show that you were absent in today\'s class. Kindly explain the reason for your absence. We expect your cooperation.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:23:24'),
+(7, 'Student123123', 'Waiz Jamals', '2408A', 'student', '+92', 'Dear Waiz Jamals,\n\nThis is a formal notice from Aptech Scheme 33 Center. Our records show that you were absent in today\'s class. Kindly explain the reason for your absence. We expect your cooperation.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:24:43'),
+(8, 'Student123123', 'Waiz Jamals', '2408A', 'student', '923332110982', 'Dear Waiz Jamals,\n\nThis is a formal notice from Aptech Scheme 33 Center. Our records show that you were absent in today\'s class. Kindly explain the reason for your absence. We expect your cooperation.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:26:46'),
+(9, 'Student123123', 'Waiz Jamals', '2408A', 'guardian', '923331267223', 'Dear Guardian of Waiz Jamals,\n\nThis is a formal notice from Aptech Scheme 33 Center. Our records show that you were absent in today\'s class. Kindly explain the reason for your absence. We expect your cooperation.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:27:00'),
+(10, 'Student123123', 'Waiz Jamals', '2408A', 'student', '923332110982', 'Dear Waiz Jamals,\n\nThis is a formal notice from Aptech Scheme 33 Center. Our records show that you were absent in today\'s class. Kindly explain the reason for your absence. We expect your cooperation.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:31:29'),
+(11, 'Student123456', 'abdul rehman', '2408A', 'guardian', '923331267223', 'Dear Guardian of abdul rehman,\n\nThis is a formal notice from Aptech Scheme 33 Center. Our records show that your child, abdul rehman, was absent in today\'s class. Kindly explain the reason for the absence. We expect your cooperation.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:31:39'),
+(12, 'Student123123', 'Waiz Jamals', '2408A', 'student', '923332110982', 'Dear Waiz Jamals,\n\nThis is a friendly reminder from Aptech Scheme 33 Center that your tuition fees for batch 2408A are due. Please clear your outstanding balance at your earliest convenience to avoid any interruption in your classes.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:36:06'),
+(13, 'Student123123', 'Waiz Jamals', '2408A', 'guardian', '923331267223', 'Dear Guardian of Waiz Jamals,\n\nThis is a friendly reminder from Aptech Scheme 33 Center that your ward\'s tuition fees for batch 2408A are due. Please ensure the balance is cleared to avoid interruption in classes.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:43:05'),
+(14, 'Student123123', 'Waiz Jamals', '2408A', 'guardian', '923331267223', 'Dear Guardian of Waiz Jamals,\n\nThis message is to officially inform you that , Waiz Jamals have still not cleared the outstanding fees. Kindly ensure the balance is cleared before the 10th of every month to avoid any interruption in classes.\n\nRegards,\nAptech Scheme 33 Center', '2025-04-17 14:46:39');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `admin`
 --
 
@@ -33,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
   `adminname` varchar(50) DEFAULT NULL,
   `adminpassword` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`adminid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `admin`
@@ -60,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `assignments` (
   `uploadedby` int NOT NULL,
   PRIMARY KEY (`assignmentid`),
   KEY `assignedto` (`assignedto`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -78,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `assignments_uploaded` (
   PRIMARY KEY (`id`),
   KEY `uploaded_by` (`uploaded_by`),
   KEY `uploading_for` (`uploading_for`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -96,10 +135,10 @@ CREATE TABLE IF NOT EXISTS `batches` (
   `currentsem` varchar(50) NOT NULL,
   `batchtype` varchar(200) DEFAULT NULL,
   `batchstartdate` date DEFAULT NULL,
-  `batchstatus` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Active',
+  `batchstatus` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Active',
   PRIMARY KEY (`batchid`),
   KEY `batchinstructor` (`batchinstructor`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `batches`
@@ -121,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `books` (
   `bookfile` mediumtext,
   `booksem` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`bookid`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `books`
@@ -148,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `exams` (
   `examofbatch` int DEFAULT NULL,
   PRIMARY KEY (`examsid`),
   KEY `examofbatch` (`examofbatch`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -163,7 +202,7 @@ CREATE TABLE IF NOT EXISTS `jobs` (
   `jobdescription` mediumtext,
   `applybefore` date DEFAULT NULL,
   PRIMARY KEY (`jobid`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -175,12 +214,26 @@ DROP TABLE IF EXISTS `sent_reports`;
 CREATE TABLE IF NOT EXISTS `sent_reports` (
   `id` int NOT NULL AUTO_INCREMENT,
   `studentid` int NOT NULL,
+  `batchid` int NOT NULL,
   `month` int NOT NULL,
   `year` int NOT NULL,
+  `report_type` enum('student','guardian') NOT NULL,
   `sent_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `studentid` (`studentid`,`month`,`year`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sent_reports`
+--
+
+INSERT INTO `sent_reports` (`id`, `studentid`, `batchid`, `month`, `year`, `report_type`, `sent_at`) VALUES
+(1, 8, 0, 2, 2025, 'student', '2025-04-17 12:45:09'),
+(2, 9, 0, 2, 2025, 'student', '2025-04-17 12:48:29'),
+(3, 9, 0, 2, 2025, 'student', '2025-04-17 12:48:29'),
+(4, 9, 0, 1, 2025, 'student', '2025-04-17 12:49:02'),
+(5, 8, 0, 2, 2025, 'guardian', '2025-04-17 13:01:29'),
+(6, 9, 0, 1, 2025, 'guardian', '2025-04-17 13:01:46'),
+(7, 8, 0, 1, 2025, 'student', '2025-04-17 13:02:01');
 
 -- --------------------------------------------------------
 
@@ -201,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `dateofresignation` date DEFAULT NULL,
   `status` varchar(50) NOT NULL DEFAULT 'active',
   PRIMARY KEY (`staffid`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `staff`
@@ -232,7 +285,7 @@ CREATE TABLE IF NOT EXISTS `student` (
   `studentstatus` varchar(10) NOT NULL,
   PRIMARY KEY (`studentid`),
   KEY `studentbatch` (`studentbatch`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `student`
@@ -262,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `studentprogress` (
   `dateofprogress` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`progressno`),
   KEY `studentid` (`studentid`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `studentprogress`
@@ -271,7 +324,11 @@ CREATE TABLE IF NOT EXISTS `studentprogress` (
 INSERT INTO `studentprogress` (`progressno`, `studentid`, `assignmentmarks`, `quizmarksinternal`, `practical`, `modular`, `classes_conducted`, `classes_held`, `remarks`, `dateofprogress`) VALUES
 (25, 8, 40, 50, 20, 10, 12, 15, 'Satisfied', '2025-02-28 19:00:00'),
 (26, 8, 10, 10, 10, 10, 10, 10, 'Satisfied', '2025-04-14 19:00:00'),
-(27, 9, 10, 10, 10, 10, 10, 10, 'Satisfied', '2025-04-14 19:00:00');
+(27, 9, 10, 10, 10, 10, 10, 10, 'Satisfied', '2025-04-14 19:00:00'),
+(28, 8, 10, 10, 0, 0, 13, 13, 'Satisfied', '2025-01-31 19:00:00'),
+(29, 9, 10, 10, 0, 0, 13, 13, '', '2025-01-31 19:00:00'),
+(30, 8, 30, 50, 20, 20, 12, 13, 'Satisfied', '2024-12-31 19:00:00'),
+(31, 9, 98, 88, 18, 19, 9, 13, 'Satisfied', '2024-12-31 19:00:00');
 
 -- --------------------------------------------------------
 
@@ -287,9 +344,9 @@ CREATE TABLE IF NOT EXISTS `student_complaints` (
   `faculty` varchar(255) NOT NULL,
   `complaint_type` varchar(100) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `remarks` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `remarks` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `student_complaints`
@@ -331,12 +388,6 @@ ALTER TABLE `batches`
 --
 ALTER TABLE `exams`
   ADD CONSTRAINT `exams_ibfk_1` FOREIGN KEY (`examofbatch`) REFERENCES `batches` (`batchid`);
-
---
--- Constraints for table `sent_reports`
---
-ALTER TABLE `sent_reports`
-  ADD CONSTRAINT `sent_reports_ibfk_1` FOREIGN KEY (`studentid`) REFERENCES `student` (`studentid`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `student`

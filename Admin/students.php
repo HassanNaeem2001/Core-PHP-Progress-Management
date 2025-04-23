@@ -9,12 +9,13 @@ if (isset($_POST['btnaddstudent'])) {
     $studentemail = $_POST['studentemail'];
     $studentpassword = md5($_POST['studentpassword']); // Encrypt password
     $studentbatch = $_POST['studentbatch']; // Stores batch ID
+    $course_code = $_POST['course_code']; // New field
     $studentphoneno = $_POST['studentphoneno'];
     $studentguardianphoneno = $_POST['studentguardianphoneno'];
     $studentstatus = $_POST['studentstatus'];
 
-    $query = "INSERT INTO student (studentname, enrollmentno, studentemail, studentpassword, studentbatch, studentphoneno, studentguardianphoneno, studentstatus) 
-              VALUES ('$studentname', '$enrollmentno', '$studentemail', '$studentpassword', '$studentbatch', '$studentphoneno', '$studentguardianphoneno', '$studentstatus')";
+    $query = "INSERT INTO student (studentname, enrollmentno, studentemail, studentpassword, studentbatch, course_code, studentphoneno, studentguardianphoneno, studentstatus) 
+              VALUES ('$studentname', '$enrollmentno', '$studentemail', '$studentpassword', '$studentbatch', '$course_code', '$studentphoneno', '$studentguardianphoneno', '$studentstatus')";
 
     if (mysqli_query($conn, $query)) {
         $success = "Student Added Successfully!";
@@ -27,16 +28,30 @@ if (isset($_POST['btnaddstudent'])) {
 if (isset($_POST['update_status'])) {
     $student_id = $_POST['student_id'];
     $new_status = $_POST['new_status'];
-    $updateQuery = "UPDATE student SET studentstatus='$new_status' WHERE studentid='$student_id'";
+    $date_today = date('Y-m-d');
+
+    $dropout_date = "NULL";
+    $cc_date = "NULL";
+
+    if ($new_status == 'Dropout') {
+        $dropout_date = "'$date_today'";
+    } elseif ($new_status == 'Course Complete') {
+        $cc_date = "'$date_today'";
+    }
+
+    $updateQuery = "UPDATE student 
+                    SET studentstatus='$new_status', 
+                        dropout_date = $dropout_date, 
+                        cc_date = $cc_date 
+                    WHERE studentid='$student_id'";
+
     mysqli_query($conn, $updateQuery);
 }
 
-// Fetch students and join with batches for batch name
 $query = "SELECT student.*, batches.batchcode FROM student
-          INNER JOIN batches ON student.studentbatch = batches.batchid"; // Assuming batchid is the PK in batches
+          INNER JOIN batches ON student.studentbatch = batches.batchid";
 $result = mysqli_query($conn, $query);
 
-// Fetch all batches for dropdown
 $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
 ?>
 
@@ -55,6 +70,7 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
                 <input type="text" name="enrollmentno" class="mt-2 form-control" placeholder="Enter Enrollment No" required>
                 <input type="text" name="studentemail" class="mt-2 form-control" placeholder="Enter Student Email or Student Id again" required>
                 <input type="password" name="studentpassword" class="mt-2 form-control" placeholder="Enter Password" required>
+                <input type="text" name="course_code" class="mt-2 form-control" placeholder="Enter Course Code" required>
                 <select name="studentbatch" class="mt-2 w-100 p-1" required>
                     <option value="" selected disabled>Select Student Batch</option>
                     <?php while ($row = mysqli_fetch_array($batchQuery)) {
@@ -82,11 +98,12 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
             <tr>
                 <th>Enrollment No</th>
                 <th>Name</th>
+                <th>Course Code</th>
                 <th>Batch</th>
                 <th>Status</th>
                 <th>Update Status</th>
                 <th>Actions</th>
-                <th>Edit Details</th> <!-- Added Actions column -->
+                <th>Edit Details</th>
             </tr>
         </thead>
         <tbody>
@@ -94,9 +111,9 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
                 <tr>
                     <td><?php echo $row['enrollmentno']; ?></td>
                     <td><?php echo $row['studentname']; ?></td>
+                    <td><?php echo $row['course_code']; ?></td>
                     <td><?php echo $row['batchcode']; ?></td>
                     <td><span class="badge bg-<?php echo ($row['studentstatus'] == 'Active') ? 'success' : 'danger'; ?>"> <?php echo $row['studentstatus']; ?> </span></td>
-                    
                     <td>
                         <form method="post" action="">
                             <input type="hidden" name="student_id" value="<?php echo $row['studentid']; ?>">
@@ -109,26 +126,23 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
                         </form>
                     </td>
                     <td>
-                        <!-- Delete Button -->
                         <form method="post" action="">
                             <input type="hidden" name="student_id" value="<?php echo $row['studentid']; ?>">
                             <button type="submit" class="btn btn-danger btn-sm" name="delete_student">Delete</button>
                         </form>
                     </td>
                     <td>
-    <form method="get" action="edit_student.php">
-        <input type="hidden" name="student_id" value="<?php echo $row['studentid']; ?>">
-        <button type="submit" class="btn btn-warning btn-sm">Edit</button>
-    </form>
-</td>
-
+                        <form method="get" action="edit_student.php">
+                            <input type="hidden" name="student_id" value="<?php echo $row['studentid']; ?>">
+                            <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                        </form>
+                    </td>
                 </tr>
             <?php } ?>
         </tbody>
     </table>
     </div>
 </div>
-
 
 <?php include('footeradmin.php'); ?>
 
@@ -147,17 +161,14 @@ $(document).ready(function() {
     });
 });
 </script>
+
 <?php
-// Handle the delete request
 if (isset($_POST['delete_student'])) {
     $student_id = $_POST['student_id'];
 
-    // Step 1: Delete related records from studentprogress table
     $deleteProgressQuery = "DELETE FROM studentprogress WHERE studentid = '$student_id'";
     if (mysqli_query($conn, $deleteProgressQuery)) {
-        // Step 2: Delete the student record from the students table
         $deleteStudentQuery = "DELETE FROM student WHERE studentid = '$student_id'";
-
         if (mysqli_query($conn, $deleteStudentQuery)) {
             echo "<script>alert('Student deleted successfully'); window.location.href='students.php';</script>";
         } else {

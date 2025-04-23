@@ -81,8 +81,9 @@ if (isset($_GET['delete'])) {
                 <label class="form-label">Apply Before (Deadline)</label>
                 <input type="date" class="form-control" name="apply_before" required>
             </div>
-            <button type="submit" name="submit" class="btn btn-dark float-end w-50">Post Job</button>
+            <button type="submit" name="submit" class="btn btn-dark float-end w-50 m-2">Post Job</button>
         </form>
+        <button onclick="window.location.href='dashboard.php'" class="btn btn-warning mt-2 float-end">Go Back</button>
 
         <div class="container mt-5">
         <h3 class="mb-4">Manage Jobs</h3>

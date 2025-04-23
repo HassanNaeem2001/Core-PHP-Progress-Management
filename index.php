@@ -64,7 +64,7 @@ LIMIT 1;");
                 <hr>
                 <?php if (!empty($error)) { echo '<div class="alert alert-danger text-center">'.$error.'</div>'; } ?>
                 <form action="" method="post">
-                    <input type="text" class="form-control w-100" name="username" placeholder="Student ID or Email" required />
+                    <input type="text" class="form-control w-100" name="username" placeholder="Username" required />
                     <br>
                     <input type="password" class="form-control w-100" name="password" placeholder="Password" required />
                     <br>
