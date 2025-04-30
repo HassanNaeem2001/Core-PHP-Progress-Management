@@ -48,7 +48,7 @@ ob_start();
                             <li><a class="dropdown-item" href="#">Recorded Lectures</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="#">Feedback</a></li>
+                    <li class="nav-item"><a class="nav-link" href="feedback.php">Feedback</a></li>
                     <li class="nav-item"><a class="nav-link" href="studentcomplaints.php">Complaints</a></li>
                 </ul>
                 <form method="post" class="d-flex">

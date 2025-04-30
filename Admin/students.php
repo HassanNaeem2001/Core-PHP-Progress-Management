@@ -92,6 +92,11 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
 <div class="container-fluid mt-5">
     <h4 class="m-4 pt-3">Students - View</h4>
     <hr>
+    <div class="container mt-4 text-center">
+    <form method="post" action="">
+        <button type="submit" name="refresh_passwords" class="btn btn-secondary">Refresh All Passwords</button>
+    </form>
+</div>
     <div class="table table-responsive">
     <table id="studentsTable" class="table table-bordered">
         <thead class="table-dark">
@@ -136,6 +141,11 @@ $batchQuery = mysqli_query($conn, "SELECT * FROM batches");
                             <input type="hidden" name="student_id" value="<?php echo $row['studentid']; ?>">
                             <button type="submit" class="btn btn-warning btn-sm">Edit</button>
                         </form>
+                        <form method="post" action="" class="mt-1">
+        <input type="hidden" name="student_id" value="<?php echo $row['studentid']; ?>">
+        <input type="hidden" name="enrollmentno" value="<?php echo $row['enrollmentno']; ?>">
+        <button type="submit" class="btn btn-secondary btn-sm" name="reset_student_password">Reset Password</button>
+    </form>
                     </td>
                 </tr>
             <?php } ?>
@@ -178,4 +188,37 @@ if (isset($_POST['delete_student'])) {
         echo "<script>alert('Error deleting student progress records');</script>";
     }
 }
+
+if (isset($_POST['refresh_passwords'])) {
+    // Sab students ko uthao
+    $studentsQuery = mysqli_query($conn, "SELECT studentid, enrollmentno FROM student");
+
+    while ($student = mysqli_fetch_array($studentsQuery)) {
+        $student_id = $student['studentid'];
+        $enrollmentno = $student['enrollmentno'];
+
+        $new_password = md5($enrollmentno); // md5 mein encrypt karo
+
+        // Update password
+        $updatePasswordQuery = "UPDATE student SET studentpassword = '$new_password' WHERE studentid = '$student_id'";
+        mysqli_query($conn, $updatePasswordQuery);
+    }
+
+    echo "<script>alert('All student passwords have been refreshed to their Enrollment Numbers.'); window.location.href='students.php';</script>";
+}
+if (isset($_POST['reset_student_password'])) {
+    $student_id = $_POST['student_id'];
+    $enrollmentno = $_POST['enrollmentno'];
+
+    $new_password = md5($enrollmentno); // Reset to enrollmentno
+
+    $updatePasswordQuery = "UPDATE student SET studentpassword = '$new_password' WHERE studentid = '$student_id'";
+    if (mysqli_query($conn, $updatePasswordQuery)) {
+        echo "<script>alert('Password reset successfully for student ID: $student_id'); window.location.href='students.php';</script>";
+    } else {
+        echo "<script>alert('Error resetting password');</script>";
+    }
+}
+
+
 ?>

@@ -53,6 +53,9 @@ $result = mysqli_query($conn, $query);
             ?>
         </tbody>
     </table>
+    <br>
+    <button onclick="window.location.href='dashboard.php'" class="btn btn-warning mt-2 float-end">Go Back</button>
+
 </div>
 
 <!-- DataTables Initialization -->

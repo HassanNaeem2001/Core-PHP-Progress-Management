@@ -104,6 +104,8 @@ ob_start(); // Start output buffering to prevent header errors
                             <a class="dropdown-item" href="quarterwise.php"
                                 >Quarter Wise SAR</a
                             >
+                            <hr>
+                            <a href="som.php" class="dropdown-item">Student of the Month</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
