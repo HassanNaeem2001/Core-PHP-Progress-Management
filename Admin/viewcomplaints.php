@@ -27,29 +27,41 @@ $result = mysqli_query($conn, $query);
                 <th>Complaint Type</th>
                 <th>Recieved On</th>
                 <th>Remarks</th>
+                <th>Reply</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <?php
-            if (mysqli_num_rows($result) > 0) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>
-                        <td>" . htmlspecialchars($row['student_name']) . "</td>
-                        <td>" . htmlspecialchars($row['batch']) . "</td>
-                        <td>" . htmlspecialchars($row['faculty']) . "</td>
-                        <td>" . htmlspecialchars($row['complaint_type']) . "</td>
-                        <td>" . htmlspecialchars($row['created_at']) . "</td>
-                        <td>" . htmlspecialchars($row['remarks']) . "</td>
-                    </tr>";
-                }
-            } else {
-                echo "<tr><td colspan='6' class='text-center'>No complaints found.</td></tr>";
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>
+                    <td>" . htmlspecialchars($row['student_name']) . "</td>
+                    <td>" . htmlspecialchars($row['batch']) . "</td>
+                    <td>" . htmlspecialchars($row['faculty']) . "</td>
+                    <td>" . htmlspecialchars($row['complaint_type']) . "</td>
+                    <td>" . htmlspecialchars($row['created_at']) . "</td>
+                    <td>" . htmlspecialchars($row['remarks']) . "</td>
+                    <td>
+                        <form method='post' action='reply_complaint.php'>
+                            <textarea name='adminremarks' rows='2' class='form-control'>" . $row['adminremarks'] . "</textarea>
+                            <input type='hidden' name='complaint_id' value='" . $row['id'] . "'>
+                    </td>
+                    <td>
+                            <button type='submit' class='btn btn-primary btn-sm'>Reply</button>
+                        </form>
+                    </td>
+                </tr>";
             }
+        } else {
+            echo "<tr><td colspan='8' class='text-center'>No complaints found.</td></tr>";
+        }
+        
             ?>
         </tbody>
     </table>
     <button onclick="window.location.href='dashboard.php'" class="btn btn-warning mt-3 float-end">Go Back</button>
-
+    
 </div>
 
 

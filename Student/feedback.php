@@ -148,11 +148,11 @@ if (isset($_POST['btnlogout'])) {
                 <label class="form-label ms-3">Does the classes start and end on time ?</label>
             </div>
             <div class="w-100 p-2">
-            <select name="" class="w-100 p-1" id="">
-                    <option value="">Everytime</option>
-                    <option value="">Mostly</option>
-                    <option value="">Rarely</option>
-                    <option value="">Never</option>
+            <select name="punctuality" class="w-100 p-1" id="">
+                    <option value="4">Everytime</option>
+                    <option value="3">Mostly</option>
+                    <option value="2">Rarely</option>
+                    <option value="1">Never</option>
                  </select>
             </div>
             <hr>
@@ -160,11 +160,11 @@ if (isset($_POST['btnlogout'])) {
                 <label class="form-label ms-3">Are you satisfied with the course coverage so far ?</label>
             </div>
             <div class="w-100 p-2">
-            <select name="" class="w-100 p-1" id="">
-                    <option value="">Everytime</option>
-                    <option value="">Mostly</option>
-                    <option value="">Rarely</option>
-                    <option value="">Never</option>
+            <select name="coursecoverage" class="w-100 p-1" id="">
+                    <option value="4">Everytime</option>
+                    <option value="3">Mostly</option>
+                    <option value="2">Rarely</option>
+                    <option value="1">Never</option>
                  </select>
             </div>
             <hr>
@@ -173,11 +173,11 @@ if (isset($_POST['btnlogout'])) {
                 <label class="form-label ms-3">Are you satisfied with the technical staff ? </label>
             </div>
             <div class="w-100 p-2">
-            <select name="" class="w-100 p-1" id="">
-                    <option value="">Everytime</option>
-                    <option value="">Mostly</option>
-                    <option value="">Rarely</option>
-                    <option value="">Never</option>
+            <select name="technicalstaff" class="w-100 p-1" id="">
+                    <option value="4">Everytime</option>
+                    <option value="3">Mostly</option>
+                    <option value="2">Rarely</option>
+                    <option value="1">Never</option>
                  </select>
             
             </div>
@@ -186,11 +186,11 @@ if (isset($_POST['btnlogout'])) {
                 <label class="form-label ms-3">Do you get the monthly academics report on time?</label>
             </div>
             <div class="w-100 p-2">
-            <select name="" class="w-100 p-1" id="">
-                    <option value="">Everytime</option>
-                    <option value="">Mostly</option>
-                    <option value="">Rarely</option>
-                    <option value="">Never</option>
+            <select name="monthlysar" class="w-100 p-1" id="">
+                    <option value="4">Everytime</option>
+                    <option value="3">Mostly</option>
+                    <option value="2">Rarely</option>
+                    <option value="1">Never</option>
                  </select>
             </div>
             </div>
@@ -199,11 +199,11 @@ if (isset($_POST['btnlogout'])) {
                 <label class="form-label ms-3">Is the faculty able to clear your doubts during lecture ?</label>
             </div>
             <div class="w-100 p-2">
-            <select name="" class="w-100 p-1" id="">
-                    <option value="">Everytime</option>
-                    <option value="">Mostly</option>
-                    <option value="">Rarely</option>
-                    <option value="">Never</option>
+            <select name="doubts" class="w-100 p-1" id="">
+                    <option value="4">Everytime</option>
+                    <option value="3">Mostly</option>
+                    <option value="2">Rarely</option>
+                    <option value="1">Never</option>
                  </select>
             </div>
             <hr>
@@ -211,11 +211,11 @@ if (isset($_POST['btnlogout'])) {
                 <label class="form-label ms-3">Are the exams and assignments taken on time ?</label>
             </div>
             <div class="w-100 p-2">
-            <select name="" class="w-100 p-1" id="">
-                    <option value="">Everytime</option>
-                    <option value="">Mostly</option>
-                    <option value="">Rarely</option>
-                    <option value="">Never</option>
+            <select name="exams" class="w-100 p-1" id="">
+                    <option value="4">Everytime</option>
+                    <option value="3">Mostly</option>
+                    <option value="2">Rarely</option>
+                    <option value="1">Never</option>
                  </select>
             </div>
             <hr>
@@ -223,11 +223,11 @@ if (isset($_POST['btnlogout'])) {
                 <label class="form-label ms-3">Are the books being followed in classes ?</label>
             </div>
             <div class="w-100 p-2">
-            <select name="" class="w-100 p-1" id="">
-                    <option value="">Everytime</option>
-                    <option value="">Mostly</option>
-                    <option value="">Rarely</option>
-                    <option value="">Never</option>
+            <select name="books" class="w-100 p-1" id="">
+                    <option value="4">Everytime</option>
+                    <option value="3">Mostly</option>
+                    <option value="2">Rarely</option>
+                    <option value="1">Never</option>
                  </select>
             </div>
             <hr>
@@ -235,25 +235,29 @@ if (isset($_POST['btnlogout'])) {
                 <label class="form-label ms-3">Do you get the time for practice for the lecture delivered ?</label>
             </div>
             <div class="w-100 p-2">
-            <select name="" class="w-100 p-1" id="">
-                    <option value="">Everytime</option>
-                    <option value="">Mostly</option>
-                    <option value="">Rarely</option>
-                    <option value="">Never</option>
+            <select name="practice" class="w-100 p-1" id="">
+                    <option value="4">Everytime</option>
+                    <option value="3">Mostly</option>
+                    <option value="2">Rarely</option>
+                    <option value="1">Never</option>
                  </select>
             </div>    
+            
         </div>
 
+        
             
           </div>
           <br>
             <div class="mb-3">
                 <label class="form-label ms-3">Remarks / Message</label> 
                 <textarea class="form-control" style="border:1px solid black" name="remarks" rows="4" placeholder="Explain your feedback in detail..." required></textarea>
+
+                <input type="date" class="form-control" name="feedbackmonth" value="<?php echo date('Y-m-d'); ?>" hidden>
             </div>
             <br>
 
-            <button type="submit" name="submit_complaint" class="btn btn-dark float-end w-50">Submit Complaint</button>
+            <button type="submit" name="submit_feedback" class="btn btn-dark float-end w-50">Submit Complaint</button>
         </form>
     </div>
     <br><br>
@@ -261,3 +265,45 @@ if (isset($_POST['btnlogout'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<?php
+if(isset($_POST['submit_feedback']))
+{
+    $studentid = $_SESSION['studentid'];
+    $punctuality = $_POST['punctuality'];
+    $coursecoverage = $_POST['coursecoverage'];
+    $technicalstaff = $_POST['technicalstaff'];
+    $monthlysar = $_POST['monthlysar'];
+    $doubts = $_POST['doubts'];
+    $exams = $_POST['exams'];
+    $books = $_POST['books'];
+    $practice = $_POST['practice'];
+    $remarks = $_POST['remarks'];
+    $batch = $_SESSION['batch'];
+    $month = $_POST['feedbackmonth'];
+
+    $batchid = mysqli_query($conn, "SELECT batchid FROM batches WHERE batchcode='$batch'") or die(mysqli_error($conn));
+    $batchid = mysqli_fetch_array($batchid);
+    $batchidfinal = $batchid['batchid'];
+
+    $q = mysqli_query($conn, "
+    INSERT INTO feedback (
+        feedbackgivenby, feedbackofbatch, punctuality, coursecoverage, technicalstaff, monthlysar,
+        doubtsclarity, exams, bookutilization, timeforpractice, remarks, feedbackmonth
+    ) VALUES (
+        '$studentid', '$batchidfinal', '$punctuality', '$coursecoverage', '$technicalstaff', '$monthlysar',
+        '$doubts', '$exams', '$books', '$practice', '$remarks', '$month'
+    )
+") or die(mysqli_error($conn));
+
+
+    if($q)
+    {
+        echo "<script>alert('Feedback submitted successfully!');</script>";
+    }
+    else
+    {
+        echo "<script>alert('Error submitting feedback. Please try again.');</script>";
+    }
+
+}
+?>

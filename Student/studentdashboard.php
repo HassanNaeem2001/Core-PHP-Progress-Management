@@ -7,6 +7,12 @@ ob_start();
 <html lang="en">
 <head>
     <title>Student Dashboard</title>
+    <style>
+        html,body{
+            margin:0px;
+            padding:0px
+        }
+    </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
@@ -20,9 +26,26 @@ ob_start();
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
+    <?php
+    $q = mysqli_query($conn,"SELECT som.*, s.studentname AS student_name, b.batchcode AS batch_name
+FROM student_of_the_month som
+JOIN student s ON som.studentid = s.studentid
+JOIN batches b ON som.batchcode = b.batchid
+ORDER BY som.awarded_at DESC
+LIMIT 1;
+;
 
+");
+    $row = mysqli_fetch_array($q);
+    ?>
+    <div class="bg-warning fixed-top p-1" style="border-bottom:2px solid white">
+    <marquee behavior="" direction="left">
+            <b>STUDENT OF THE MONTH : <?php echo strtoupper($row['student_name'])?> - BATCH : <?php echo $row['batch_name']?></b>
+        </marquee>
+    </div>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark     " >
+   
         <div class="container-fluid">
             <a class="navbar-brand" href="studentdashboard.php">
                 <img src="../Images/aptlogo.png" height="50px" alt="Logo">
@@ -386,7 +409,7 @@ if (mysqli_num_rows($query) > 0) {
 
 
       <!-- Exams Update Table -->
-      <div class="container-fluid mt-4 text-light d-flex justify-content-center">
+      <div class="container-fluid mt-4 text-light d-flex justify-content-center" >
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
@@ -457,6 +480,7 @@ $examResult = $examQuery->get_result();
         </div>
     </div>
 </div>
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

@@ -67,6 +67,9 @@ ob_start(); // Start output buffering to prevent header errors
                     <li class="nav-item">
                         <a class="nav-link" href="viewcomplaints.php">Complaints</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="feedbacks.php">Feedbacks</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a
                             class="nav-link dropdown-toggle"
@@ -130,19 +133,7 @@ ob_start(); // Start output buffering to prevent header errors
                         </div>
                     </li>
                     <li>
-                    <form class="d-flex my-2 my-lg-0 ms-lg-4">
-                    <input
-                        class="form-control me-sm-2"
-                        type="text"
-                        placeholder="Search"
-                    />
-                    <button
-                        class="btn btn-secondary my-2 my-sm-0"
-                        type="submit"
-                    >
-                        Search
-                    </button>
-                </form>
+                    
                     </li>
                 </ul>
                 <form method="post" class="d-flex my-2 my-lg-0">
