@@ -67,6 +67,9 @@ include('staffsessionlogic.php');
                         <li class="nav-item">
                             <a href="uploadassignment.php" class="nav-link">Upload Assignment</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="create_attendance.php" class="nav-link">Attendance </a>
+                        </li>
                     </ul>
                     <form class="d-flex my-2 my-lg-0" method="post">
                        
